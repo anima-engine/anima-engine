@@ -66,7 +66,7 @@ impl Vector {
         Vector { x: v, y: v, z: v }
     }
 
-    /// Creates a (0.0, 0.0, 0.0) Vector.
+    /// Creates a zero (0.0, 0.0, 0.0) Vector.
     ///
     /// # Example
     ///
@@ -78,7 +78,7 @@ impl Vector {
         Vector { x: 0.0, y: 0.0, z: 0.0 }
     }
 
-    /// Creates a (1.0, 1.0, 1.0) Vector.
+    /// Creates a one (1.0, 1.0, 1.0) Vector.
     ///
     /// # Example
     ///
@@ -88,6 +88,78 @@ impl Vector {
     /// ```
     pub fn one() -> Vector {
         Vector { x: 1.0, y: 1.0, z: 1.0 }
+    }
+
+    /// Creates a back (0.0, 0.0, -1.0) Vector.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// assert_eq!(Vector::back(), Vector { x: 0.0, y: 0.0, z: -1.0 });
+    /// ```
+    pub fn back() -> Vector {
+        Vector { x: 0.0, y: 0.0, z: -1.0 }
+    }
+
+    /// Creates a down (0.0, -1.0, 0.0) Vector.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// assert_eq!(Vector::down(), Vector { x: 0.0, y: -1.0, z: 0.0 });
+    /// ```
+    pub fn down() -> Vector {
+        Vector { x: 0.0, y: -1.0, z: 0.0 }
+    }
+
+    /// Creates a forward (0.0, 0.0, 1.0) Vector.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// assert_eq!(Vector::forward(), Vector { x: 0.0, y: 0.0, z: 1.0 });
+    /// ```
+    pub fn forward() -> Vector {
+        Vector { x: 0.0, y: 0.0, z: 1.0 }
+    }
+
+    /// Creates a left (-1.0, 0.0, 0.0) Vector.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// assert_eq!(Vector::left(), Vector { x: -1.0, y: 0.0, z: 0.0 });
+    /// ```
+    pub fn left() -> Vector {
+        Vector { x: -1.0, y: 0.0, z: 0.0 }
+    }
+
+    /// Creates a right (1.0, 0.0, 0.0) Vector.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// assert_eq!(Vector::right(), Vector { x: 1.0, y: 0.0, z: 0.0 });
+    /// ```
+    pub fn right() -> Vector {
+        Vector { x: 1.0, y: 0.0, z: 0.0 }
+    }
+
+    /// Creates an up (0.0, 1.0, 0.0) Vector.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// assert_eq!(Vector::up(), Vector { x: 0.0, y: 1.0, z: 0.0 });
+    /// ```
+    pub fn up() -> Vector {
+        Vector { x: 0.0, y: 1.0, z: 0.0 }
     }
 
     /// Computes the length of a vector.
