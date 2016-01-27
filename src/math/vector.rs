@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use math::Quaternion;
+
 /// A simple vector `struct` tailored specifically for graphics.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vector {
@@ -185,11 +187,11 @@ impl Vector {
     /// ```
     /// # use anima::math::Vector;
     /// let v = Vector::new(1.0, 2.0, 2.0);
-    /// let n = v.normalize();
+    /// let n = v.norm();
     ///
     /// assert_eq!(n.length(), 1.0); // Keep precision in mind when comparing floats.
     /// ```
-    pub fn normalize(&self) -> Vector {
+    pub fn norm(&self) -> Vector {
         let length = self.length();
 
         Vector {
@@ -235,6 +237,44 @@ impl Vector {
         }
     }
 
+    /// Rotates a vector according to the rotation represented by the quaternion.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// # use anima::math::Quaternion;
+    /// let q = Quaternion::new(0.0, 1.0, 0.0, 0.0);
+    /// let v = Vector::new(1.0, 0.0, 0.0);
+    ///
+    /// assert_eq!(v.rot(q), Vector { x: -1.0, y: 0.0, z: 0.0 } );
+    /// ```
+    pub fn rot(&self, quaternion: Quaternion) -> Vector {
+        let conjugate = quaternion.conj();
+        let result = quaternion *
+                     Quaternion::new(self.x, self.y, self.z, 0.0) *
+                     conjugate;
+
+        Vector { x: result.x, y: result.y, z: result.z }
+    }
+
+    /// Rotates a vector according to the rotation represented by the quaternion around a point.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// # use anima::math::Quaternion;
+    /// let q = Quaternion::new(0.0, 1.0, 0.0, 0.0);
+    /// let v = Vector::new(1.0, 0.0, 0.0);
+    /// let p = Vector::new(2.0, 0.0, 0.0);
+    ///
+    /// assert_eq!(v.rot_around(q, p), Vector { x: 3.0, y: 0.0, z: 0.0 } );
+    /// ```
+    pub fn rot_around(self, quaternion: Quaternion, point: Vector) -> Vector {
+        (self - point).rot(quaternion) + point
+    }
+
     /// Computes the angle in radians between two vectors.
     ///
     /// # Example
@@ -260,13 +300,13 @@ impl Vector {
     /// let v1 = Vector::new(0.0, 0.0, 0.0);
     /// let v2 = Vector::new(0.0, 1.0, 0.0);
     ///
-    /// assert_eq!(v1.distance(v2), 1.0);
+    /// assert_eq!(v1.dist(v2), 1.0);
     /// ```
-    pub fn distance(self, other: Vector) -> f32 {
+    pub fn dist(self, other: Vector) -> f32 {
         (self - other).length()
     }
 
-    /// Converts the vector to an array of homogeneous coordinates.
+    /// Converts a vector to an array of homogeneous coordinates.
     ///
     /// # Example
     ///
