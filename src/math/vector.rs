@@ -79,6 +79,77 @@ impl Vector {
     pub fn length(&self) -> f32 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
+
+    /// Computes the normalized version of a vector.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// let v = Vector::new(1.0, 2.0, 2.0);
+    /// let n = v.normalize();
+    ///
+    /// assert_eq!(n.length(), 1.0); // Keep precision in mind when comparing floats.
+    /// ```
+    pub fn normalize(&self) -> Vector {
+        let length = self.length();
+
+        Vector {
+            x: self.x / length,
+            y: self.y / length,
+            z: self.z / length
+        }
+    }
+
+    /// Computes the dot product between two vectors.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// let v1 = Vector::new(1.0, 2.0, 2.0);
+    /// let v2 = Vector::new(3.0, 3.0, 1.0);
+    ///
+    /// assert_eq!(v1.dot(v2), 11.0);
+    /// ```
+    pub fn dot(&self, other: Vector) -> f32 {
+        self.x * other.x +
+        self.y * other.y +
+        self.z * other.z
+    }
+
+    /// Computes the cross product between two vectors.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// let v1 = Vector::new(1.0, 2.0, 2.0);
+    /// let v2 = Vector::new(3.0, 3.0, 1.0);
+    ///
+    /// assert_eq!(v1.cross(v2), Vector { x: -4.0, y: 5.0, z: -3.0 });
+    /// ```
+    pub fn cross(&self, other: Vector) -> Vector {
+        Vector {
+            x: self.y * other.z - self.z * other.y,
+            y: self.z * other.x - self.x * other.z,
+            z: self.x * other.y - self.y * other.x
+        }
+    }
+
+    /// Converts the vector to an array of homogeneous coordinates.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// let v = Vector::new(1.0, 2.0, 3.0);
+    ///
+    /// assert_eq!(v.to_array(), [1.0, 2.0, 3.0, 1.0]);
+    /// ```
+    pub fn to_array(&self) -> [f32; 4] {
+        [self.x, self.y, self.z, 1.0]
+    }
 }
 
 use std::ops::Add;
