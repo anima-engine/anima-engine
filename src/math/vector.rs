@@ -168,7 +168,7 @@ impl Add for Vector {
     }
 }
 
-impl Mul for Vector {
+impl Mul<Vector> for Vector {
     type Output = Vector;
 
     fn mul(self, other: Vector) -> Vector {
@@ -176,6 +176,30 @@ impl Mul for Vector {
             x: self.x * other.x,
             y: self.y * other.y,
             z: self.z * other.z
+        }
+    }
+}
+
+impl Mul<f32> for Vector {
+    type Output = Vector;
+
+    fn mul(self, scalar: f32) -> Vector {
+        Vector {
+            x: self.x * scalar,
+            y: self.y * scalar,
+            z: self.z * scalar
+        }
+    }
+}
+
+impl Mul<Vector> for f32 {
+    type Output = Vector;
+
+    fn mul(self, vector: Vector) -> Vector {
+        Vector {
+            x: vector.x * self,
+            y: vector.y * self,
+            z: vector.z * self
         }
     }
 }
