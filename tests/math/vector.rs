@@ -39,3 +39,10 @@ fn test_scalar_mul() {
     assert_eq!(v * 2.0, anima::math::Vector { x: 2.0, y: 2.0, z: 2.0 });
     assert_eq!(2.0 * v, anima::math::Vector { x: 2.0, y: 2.0, z: 2.0 });
 }
+
+#[test]
+fn test_neg() {
+    let v = anima::math::Vector::new_unf(1.0);
+
+    assert_eq!(-v, anima::math::Vector { x: -1.0, y: -1.0, z: -1.0 });
+}

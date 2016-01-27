@@ -235,6 +235,37 @@ impl Vector {
         }
     }
 
+    /// Computes the angle in radians between two vectors.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// # use std::f32::consts;
+    /// let v1 = Vector::new(1.0, 0.0, 0.0);
+    /// let v2 = Vector::new(0.0, 1.0, 0.0);
+    ///
+    /// assert_eq!(v1.angle(v2), consts::PI / 2.0);
+    /// ```
+    pub fn angle(&self, other: Vector) -> f32 {
+        self.dot(other).acos()
+    }
+
+    /// Computes the distance between two vectors.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// let v1 = Vector::new(0.0, 0.0, 0.0);
+    /// let v2 = Vector::new(0.0, 1.0, 0.0);
+    ///
+    /// assert_eq!(v1.distance(v2), 1.0);
+    /// ```
+    pub fn distance(self, other: Vector) -> f32 {
+        (self - other).length()
+    }
+
     /// Converts the vector to an array of homogeneous coordinates.
     ///
     /// # Example
@@ -251,7 +282,9 @@ impl Vector {
 }
 
 use std::ops::Add;
+use std::ops::Sub;
 use std::ops::Mul;
+use std::ops::Neg;
 use std::cmp::Ordering;
 
 impl Add for Vector {
@@ -262,6 +295,18 @@ impl Add for Vector {
             x: self.x + other.x,
             y: self.y + other.y,
             z: self.z + other.z
+        }
+    }
+}
+
+impl Sub for Vector {
+    type Output = Vector;
+
+    fn sub(self, other: Vector) -> Vector {
+        Vector {
+            x: self.x - other.x,
+            y: self.y - other.y,
+            z: self.z - other.z
         }
     }
 }
@@ -298,6 +343,18 @@ impl Mul<Vector> for f32 {
             x: vector.x * self,
             y: vector.y * self,
             z: vector.z * self
+        }
+    }
+}
+
+impl Neg for Vector {
+    type Output = Vector;
+
+    fn neg(self) -> Vector {
+        Vector {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z
         }
     }
 }
