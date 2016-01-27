@@ -68,10 +68,12 @@ impl Vector {
 }
 
 use std::ops::Add;
+use std::ops::Mul;
+use std::cmp::Ordering;
 
 impl Add for Vector {
     type Output = Vector;
-    
+
     fn add(self, other: Vector) -> Vector {
         Vector {
             x: self.x + other.x,
@@ -81,7 +83,17 @@ impl Add for Vector {
     }
 }
 
-use std::cmp::Ordering;
+impl Mul for Vector {
+    type Output = Vector;
+
+    fn mul(self, other: Vector) -> Vector {
+        Vector {
+            x: self.x * other.x,
+            y: self.y * other.y,
+            z: self.z * other.z
+        }
+    }
+}
 
 impl PartialOrd for Vector {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
