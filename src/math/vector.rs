@@ -66,6 +66,30 @@ impl Vector {
         Vector { x: v, y: v, z: v }
     }
 
+    /// Creates a (0.0, 0.0, 0.0) Vector.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// assert_eq!(Vector::zero(), Vector { x: 0.0, y: 0.0, z: 0.0 });
+    /// ```
+    pub fn zero() -> Vector {
+        Vector { x: 0.0, y: 0.0, z: 0.0 }
+    }
+
+    /// Creates a (1.0, 1.0, 1.0) Vector.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Vector;
+    /// assert_eq!(Vector::one(), Vector { x: 1.0, y: 1.0, z: 1.0 });
+    /// ```
+    pub fn one() -> Vector {
+        Vector { x: 1.0, y: 1.0, z: 1.0 }
+    }
+
     /// Computes the length of a vector.
     ///
     /// # Example
