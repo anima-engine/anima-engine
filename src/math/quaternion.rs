@@ -19,13 +19,13 @@ use math::Vector;
 /// A simple quaterion `struct` tailored specifically for graphics.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Quaternion {
-    /// `f32` imaginary i part
+    /// `f32` imaginary *i* value
     pub x: f32,
-    /// `f32` imaginary j part
+    /// `f32` imaginary *j* value
     pub y: f32,
-    /// `f32` imaginary k part
+    /// `f32` imaginary *k* value
     pub z: f32,
-    /// `f32` real part
+    /// `f32` real value
     pub w: f32
 }
 

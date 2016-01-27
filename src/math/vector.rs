@@ -19,11 +19,11 @@ use math::Quaternion;
 /// A simple vector `struct` tailored specifically for graphics.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vector {
-    /// `f32` x coordinate value
+    /// `f32` *x* coordinate value
     pub x: f32,
-    /// `f32` y coordinate value
+    /// `f32` *y* coordinate value
     pub y: f32,
-    /// `f32` y coordinate value
+    /// `f32` *z* coordinate value
     pub z: f32
 }
 
@@ -247,7 +247,7 @@ impl Vector {
     /// let q = Quaternion::new(0.0, 1.0, 0.0, 0.0);
     /// let v = Vector::new(1.0, 0.0, 0.0);
     ///
-    /// assert_eq!(v.rot(q), Vector { x: -1.0, y: 0.0, z: 0.0 } );
+    /// assert_eq!(v.rot(q), Vector { x: -1.0, y: 0.0, z: 0.0 });
     /// ```
     pub fn rot(&self, quaternion: Quaternion) -> Vector {
         let conjugate = quaternion.conj();
@@ -269,7 +269,7 @@ impl Vector {
     /// let v = Vector::new(1.0, 0.0, 0.0);
     /// let p = Vector::new(2.0, 0.0, 0.0);
     ///
-    /// assert_eq!(v.rot_around(q, p), Vector { x: 3.0, y: 0.0, z: 0.0 } );
+    /// assert_eq!(v.rot_around(q, p), Vector { x: 3.0, y: 0.0, z: 0.0 });
     /// ```
     pub fn rot_around(self, quaternion: Quaternion, point: Vector) -> Vector {
         (self - point).rot(quaternion) + point
