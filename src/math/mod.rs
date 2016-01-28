@@ -17,6 +17,7 @@
 //! A module containing linear math constructs useful in graphics.
 pub use self::vector::Vector;
 pub use self::quaternion::Quaternion;
+pub use self::matrix::Matrix;
 
 mod vector;
 mod quaternion;
