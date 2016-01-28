@@ -32,8 +32,8 @@ fn test_mul() {
         a2[i] = 16.0 - (i as f32);
     }
 
-    let m1 = Matrix { array: a1 };
-    let m2 = Matrix { array: a2 };
+    let m1 = Matrix::new(a1);
+    let m2 = Matrix::new(a2);
 
     assert_eq!((m1 * m2).array, [
         386.0, 444.0, 502.0, 560.0,
@@ -57,4 +57,19 @@ fn test_linearity() {
     let v = Vector::new(v.x.round(), v.y.round(), v.z.round());
 
     assert_eq!(v, Vector::new(1.0, 0.0, 0.0));
+}
+
+#[test]
+fn test_inv() {
+    let m = Matrix::ident().rot(Quaternion::new_rot(Vector::forward(), consts::PI / 4.0));
+
+    assert_eq!(m * m.inv(), Matrix::ident());
+}
+
+#[test]
+#[should_panic]
+fn test_det_0_panic() {
+    let m = Matrix::new([0.0; 16]);
+    
+    m.inv();
 }

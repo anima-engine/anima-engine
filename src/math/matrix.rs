@@ -197,6 +197,59 @@ impl Matrix {
     pub fn rot_around(&self, quaternion: Quaternion, point: Vector) -> Matrix {
         self.trans(-point).rot(quaternion).trans(point)
     }
+
+    /// Inverts a matrix.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Matrix;
+    /// assert_eq!(Matrix::ident().inv(), Matrix::ident());
+    /// ```
+    pub fn inv(&self) -> Matrix {
+        let m = self.array;
+
+        let s0 = m[0] * m[5]  - m[1] * m[4];
+        let s1 = m[0] * m[9]  - m[1] * m[8];
+        let s2 = m[0] * m[13] - m[1] * m[12];
+        let s3 = m[4] * m[9]  - m[5] * m[8];
+        let s4 = m[4] * m[13] - m[5] * m[12];
+        let s5 = m[8] * m[13] - m[9] * m[12];
+
+        let c5 = m[10] * m[15] - m[11] * m[14];
+        let c4 = m[6]  * m[15] - m[7]  * m[14];
+        let c3 = m[6]  * m[11] - m[7]  * m[10];
+        let c2 = m[2]  * m[15] - m[3]  * m[14];
+        let c1 = m[2]  * m[11] - m[3]  * m[10];
+        let c0 = m[2]  * m[7]  - m[3]  * m[6];
+
+        let det = s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0;
+
+        if det == 0.0 { panic!("Matrix {:?} is not invertable.", m); }
+
+        let inv_det = 1.0 / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
+
+        Matrix {
+            array: [
+                ( m[5] * c5 - m[9]  * c4 + m[13] * c3) * inv_det,
+                (-m[1] * c5 + m[9]  * c2 - m[13] * c1) * inv_det,
+                ( m[1] * c4 - m[5]  * c2 + m[13] * c0) * inv_det,
+                (-m[1] * c3 + m[5]  * c1 - m[9]  * c0) * inv_det,
+                (-m[4] * c5 + m[8]  * c4 - m[12] * c3) * inv_det,
+                ( m[0] * c5 - m[8]  * c2 + m[12] * c1) * inv_det,
+                (-m[0] * c4 + m[4]  * c2 - m[12] * c0) * inv_det,
+                ( m[0] * c3 - m[4]  * c1 + m[8]  * c0) * inv_det,
+                ( m[7] * s5 - m[11] * s4 + m[15] * s3) * inv_det,
+                (-m[3] * s5 + m[11] * s2 - m[15] * s1) * inv_det,
+                ( m[3] * s4 - m[7]  * s2 + m[15] * s0) * inv_det,
+                (-m[3] * s3 + m[7]  * s1 - m[11] * s0) * inv_det,
+                (-m[6] * s5 + m[10] * s4 - m[14] * s3) * inv_det,
+                ( m[2] * s5 - m[10] * s2 + m[14] * s1) * inv_det,
+                (-m[2] * s4 + m[6]  * s2 - m[14] * s0) * inv_det,
+                ( m[2] * s3 - m[6]  * s1 + m[10] * s0) * inv_det
+            ]
+        }
+    }
 }
 
 use std::ops::Mul;
