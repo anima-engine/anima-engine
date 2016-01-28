@@ -305,20 +305,6 @@ impl Vector {
     pub fn dist(self, other: Vector) -> f32 {
         (self - other).length()
     }
-
-    /// Converts a vector to an array of homogeneous coordinates.
-    ///
-    /// # Example
-    ///
-    /// ```
-    /// # use anima::math::Vector;
-    /// let v = Vector::new(1.0, 2.0, 3.0);
-    ///
-    /// assert_eq!(v.to_array(), [1.0, 2.0, 3.0, 1.0]);
-    /// ```
-    pub fn to_array(&self) -> [f32; 4] {
-        [self.x, self.y, self.z, 1.0]
-    }
 }
 
 use std::ops::Add;
