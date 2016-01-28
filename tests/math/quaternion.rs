@@ -23,16 +23,3 @@ fn test_mul() {
 
     assert_eq!(q1 * q2, anima::math::Quaternion { x: 12.0, y: 0.0, z: 6.0, w: -4.0 });
 }
-
-#[test]
-fn test_neg() {
-    let q = anima::math::Quaternion::new(0.0, 1.0, 2.0, 3.0);
-
-    let result = q * -q;
-    let identity = anima::math::Quaternion::ident();
-
-    assert!((result.x - identity.x).abs() < 0.0001);
-    assert!((result.y - identity.y).abs() < 0.0001);
-    assert!((result.z - identity.z).abs() < 0.0001);
-    assert!((result.w - identity.w).abs() < 0.0001);
-}

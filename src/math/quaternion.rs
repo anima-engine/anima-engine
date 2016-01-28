@@ -94,28 +94,21 @@ impl Quaternion {
     pub fn conj(&self) -> Quaternion {
         Quaternion { x: -self.x, y: -self.y, z: -self.z, w: self.w }
     }
-}
 
-use std::ops::Mul;
-use std::ops::Neg;
-
-impl Mul for Quaternion {
-    type Output = Quaternion;
-
-    fn mul(self, other: Quaternion) -> Quaternion {
-        Quaternion {
-            x: other.w * self.x + other.x * self.w + other.y * self.z - other.z * self.y,
-            y: other.w * self.y - other.x * self.z + other.y * self.w + other.z * self.x,
-            z: other.w * self.z + other.x * self.y - other.y * self.x + other.z * self.w,
-            w: other.w * self.w - other.x * self.x - other.y * self.y - other.z * self.z
-        }
-    }
-}
-
-impl Neg for Quaternion {
-    type Output = Quaternion;
-
-    fn neg(self) -> Quaternion {
+    /// Computes the inverse of a quaternion.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Quaternion;
+    /// let q = anima::math::Quaternion::new(0.0, 1.0, 2.0, 3.0);
+    ///
+    /// let result = q * q.inv();
+    /// let identity = anima::math::Quaternion::ident();
+    ///
+    /// assert_eq!(result.x, identity.x);
+    /// ```
+    pub fn inv(&self) -> Quaternion {
         let norm = self.x.powi(2) +
                    self.y.powi(2) +
                    self.z.powi(2) +
@@ -126,6 +119,21 @@ impl Neg for Quaternion {
             y: -self.y / norm,
             z: -self.z / norm,
             w: self.w / norm
+        }
+    }
+}
+
+use std::ops::Mul;
+
+impl Mul for Quaternion {
+    type Output = Quaternion;
+
+    fn mul(self, other: Quaternion) -> Quaternion {
+        Quaternion {
+            x: other.w * self.x + other.x * self.w + other.y * self.z - other.z * self.y,
+            y: other.w * self.y - other.x * self.z + other.y * self.w + other.z * self.x,
+            z: other.w * self.z + other.x * self.y - other.y * self.x + other.z * self.w,
+            w: other.w * self.w - other.x * self.x - other.y * self.y - other.z * self.z
         }
     }
 }
