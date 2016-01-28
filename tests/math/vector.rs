@@ -16,33 +16,35 @@
 
 extern crate anima;
 
+type Vector = anima::math::Vector;
+
 #[test]
 fn test_add() {
-    let v1 = anima::math::Vector::new_unf(1.0);
-    let v2 = anima::math::Vector::new_unf(2.0);
+    let v1 = Vector::new_unf(1.0);
+    let v2 = Vector::new_unf(2.0);
 
-    assert_eq!(v1 + v2, anima::math::Vector { x: 3.0, y: 3.0, z: 3.0 });
+    assert_eq!(v1 + v2, Vector { x: 3.0, y: 3.0, z: 3.0 });
 }
 
 #[test]
 fn test_mul() {
-    let v1 = anima::math::Vector::new_unf(1.0);
-    let v2 = anima::math::Vector::new_unf(2.0);
+    let v1 = Vector::new_unf(1.0);
+    let v2 = Vector::new_unf(2.0);
 
-    assert_eq!(v1 * v2, anima::math::Vector { x: 2.0, y: 2.0, z: 2.0 });
+    assert_eq!(v1 * v2, Vector { x: 2.0, y: 2.0, z: 2.0 });
 }
 
 #[test]
 fn test_scalar_mul() {
-    let v = anima::math::Vector::new_unf(1.0);
+    let v = Vector::new_unf(1.0);
 
-    assert_eq!(v * 2.0, anima::math::Vector { x: 2.0, y: 2.0, z: 2.0 });
-    assert_eq!(2.0 * v, anima::math::Vector { x: 2.0, y: 2.0, z: 2.0 });
+    assert_eq!(v * 2.0, Vector { x: 2.0, y: 2.0, z: 2.0 });
+    assert_eq!(2.0 * v, Vector { x: 2.0, y: 2.0, z: 2.0 });
 }
 
 #[test]
 fn test_neg() {
-    let v = anima::math::Vector::new_unf(1.0);
+    let v = Vector::new_unf(1.0);
 
-    assert_eq!(-v, anima::math::Vector { x: -1.0, y: -1.0, z: -1.0 });
+    assert_eq!(-v, Vector { x: -1.0, y: -1.0, z: -1.0 });
 }

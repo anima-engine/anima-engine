@@ -61,6 +61,7 @@ impl Matrix {
     }
 
     /// Translates a matrix according to the scale represented by a vector.
+    /// The translation is applied to the left. (`t * m`)
     ///
     /// # Example
     ///
@@ -73,18 +74,33 @@ impl Matrix {
     /// assert_eq!(m * v, Vector { x: 2.0, y: 1.0, z: 2.0 });
     /// ```
     pub fn trans(&self, vector: Vector) -> Matrix {
-        let mut r = self.array;
+        let m = self.array;
         let v = vector;
 
-        r[12] += r[0] * v.x + r[4] * v.y + r[8]  * v.z;
-        r[13] += r[1] * v.x + r[5] * v.y + r[9]  * v.z;
-        r[14] += r[2] * v.x + r[6] * v.y + r[10] * v.z;
-        r[15] += r[3] * v.x + r[7] * v.y + r[11] * v.z;
-
-        Matrix { array: r }
+        Matrix {
+            array: [
+                m[0]  + m[3]  * v.x,
+                m[1]  + m[3]  * v.y,
+                m[2]  + m[3]  * v.z,
+                m[3],
+                m[4]  + m[7]  * v.x,
+                m[5]  + m[7]  * v.y,
+                m[6]  + m[7]  * v.z,
+                m[7],
+                m[8]  + m[11] * v.x,
+                m[9]  + m[11] * v.y,
+                m[10] + m[11] * v.z,
+                m[11],
+                m[12] + m[15] * v.x,
+                m[13] + m[15] * v.y,
+                m[14] + m[15] * v.z,
+                m[15]
+            ]
+        }
     }
 
     /// Scales a matrix according to the scale represented by a vector.
+    /// The scaling is applied to the left. (`s * m`)
     ///
     /// # Example
     ///
@@ -97,26 +113,33 @@ impl Matrix {
     /// assert_eq!(m * v, Vector { x: 4.0, y: 6.0, z: 8.0 });
     /// ```
     pub fn scale(&self, vector: Vector) -> Matrix {
-        let mut r = self.array;
+        let m = self.array;
         let v = vector;
 
-        r[0]  *= v.x;
-        r[1]  *= v.x;
-        r[2]  *= v.x;
-        r[3]  *= v.x;
-        r[4]  *= v.y;
-        r[5]  *= v.y;
-        r[6]  *= v.y;
-        r[7]  *= v.y;
-        r[8]  *= v.z;
-        r[9]  *= v.z;
-        r[10] *= v.z;
-        r[11] *= v.z;
-
-        Matrix { array: r }
+        Matrix {
+            array: [
+                m[0]  * v.x,
+                m[1]  * v.y,
+                m[2]  * v.z,
+                m[3],
+                m[4]  * v.x,
+                m[5]  * v.y,
+                m[6]  * v.z,
+                m[7],
+                m[8]  * v.x,
+                m[9]  * v.y,
+                m[10] * v.z,
+                m[11],
+                m[12] * v.x,
+                m[13] * v.y,
+                m[14] * v.z,
+                m[15]
+            ]
+        }
     }
 
     /// Rotates a matrix according to the rotation represented by a quaternion.
+    /// The rotation is applied to the left. (`r * m`)
     ///
     /// # Example
     ///
@@ -132,7 +155,7 @@ impl Matrix {
     pub fn rot(self, quaternion: Quaternion) -> Matrix {
         let q = quaternion;
 
-        self * Matrix {
+        let m = Matrix {
             array: [
                 1.0 - 2.0 * (q.y.powi(2) + q.z.powi(2)),
                 2.0 * (q.x * q.y + q.z * q.w),
@@ -151,7 +174,28 @@ impl Matrix {
                 0.0,
                 1.0
             ]
-        }
+        };
+
+        m * self
+    }
+
+    /// Rotates a matrix according to the rotation represented by the quaternion around a point.
+    /// The rotation is applied to the left. (`r * m`)
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Matrix;
+    /// # use anima::math::Vector;
+    /// # use anima::math::Quaternion;
+    /// let q = Quaternion::new(0.0, 1.0, 0.0, 0.0);
+    /// let v = Vector::new(1.0, 0.0, 0.0);
+    /// let p = Vector::new(2.0, 0.0, 0.0);
+    ///
+    /// assert_eq!(Matrix::ident().rot_around(q, p) * v, Vector { x: 3.0, y: 0.0, z: 0.0 });
+    /// ```
+    pub fn rot_around(&self, quaternion: Quaternion, point: Vector) -> Matrix {
+        self.trans(-point).rot(quaternion).trans(point)
     }
 }
 

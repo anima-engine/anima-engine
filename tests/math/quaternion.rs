@@ -16,10 +16,12 @@
 
 extern crate anima;
 
+type Quaternion = anima::math::Quaternion;
+
 #[test]
 fn test_mul() {
-    let q1 = anima::math::Quaternion::new(0.0, 1.0, 2.0, 3.0);
-    let q2 = anima::math::Quaternion::new(3.0, 2.0, 1.0, 0.0);
+    let q1 = Quaternion::new(0.0, 1.0, 2.0, 3.0);
+    let q2 = Quaternion::new(3.0, 2.0, 1.0, 0.0);
 
-    assert_eq!(q1 * q2, anima::math::Quaternion { x: 12.0, y: 0.0, z: 6.0, w: -4.0 });
+    assert_eq!(q1 * q2, Quaternion { x: 12.0, y: 0.0, z: 6.0, w: -4.0 });
 }
