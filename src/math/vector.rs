@@ -136,10 +136,10 @@ impl Vector {
     ///
     /// ```
     /// # use anima::math::Vector;
-    /// assert_eq!(Vector::left(), Vector { x: -1.0, y: 0.0, z: 0.0 });
+    /// assert_eq!(Vector::left(), Vector { x: 1.0, y: 0.0, z: 0.0 });
     /// ```
     pub fn left() -> Vector {
-        Vector { x: -1.0, y: 0.0, z: 0.0 }
+        Vector { x: 1.0, y: 0.0, z: 0.0 }
     }
 
     /// Creates a right (1.0, 0.0, 0.0) Vector.
@@ -148,10 +148,10 @@ impl Vector {
     ///
     /// ```
     /// # use anima::math::Vector;
-    /// assert_eq!(Vector::right(), Vector { x: 1.0, y: 0.0, z: 0.0 });
+    /// assert_eq!(Vector::right(), Vector { x: -1.0, y: 0.0, z: 0.0 });
     /// ```
     pub fn right() -> Vector {
-        Vector { x: 1.0, y: 0.0, z: 0.0 }
+        Vector { x: -1.0, y: 0.0, z: 0.0 }
     }
 
     /// Creates an up (0.0, 1.0, 0.0) Vector.
