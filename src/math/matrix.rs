@@ -27,12 +27,12 @@ impl Matrix {
     /// # Example
     /// ```
     /// # use anima::math::Matrix;
-    /// let m = Matrix::new(&[1.0; 16]);
+    /// let m = Matrix::new([1.0; 16]);
     ///
     /// assert_eq!(m, Matrix { array: [1.0; 16] });
     /// ```
-    pub fn new(array: &[f32; 16]) -> Matrix {
-        Matrix { array: array.clone() }
+    pub fn new(array: [f32; 16]) -> Matrix {
+        Matrix { array: array }
     }
 
     /// Creates an identity (1.0 on primary diagonal) matrix.
@@ -40,7 +40,7 @@ impl Matrix {
     /// # Example
     /// ```
     /// # use anima::math::Matrix;
-    /// let m = Matrix::new(&[2.0; 16]);
+    /// let m = Matrix::new([2.0; 16]);
     ///
     /// assert_eq!(m * Matrix::ident(), Matrix { array: [2.0; 16] });
     /// ```

@@ -53,11 +53,11 @@ impl Quaternion {
     /// # use anima::math::Quaternion;
     /// # use anima::math::Vector;
     /// # use std::f32::consts;
-    /// let q = Quaternion::new_rot(&Vector::up(), consts::PI / 2.0);
+    /// let q = Quaternion::new_rot(Vector::up(), consts::PI / 2.0);
     ///
     /// assert_eq!(q, Quaternion { x: 0.0, y: 0.70710677, z: 0.0, w: 0.70710677 });
     /// ```
-    pub fn new_rot(direction: &Vector, angle: f32) -> Quaternion {
+    pub fn new_rot(direction: Vector, angle: f32) -> Quaternion {
         let direction = direction.norm();
         let sin = (angle / 2.0).sin();
 
