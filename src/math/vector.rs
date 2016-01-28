@@ -237,7 +237,7 @@ impl Vector {
         }
     }
 
-    /// Rotates a vector according to the rotation represented by the quaternion.
+    /// Rotates a vector according to the rotation represented by a quaternion.
     ///
     /// # Example
     ///
