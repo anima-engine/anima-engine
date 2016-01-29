@@ -299,12 +299,12 @@ impl Vector {
     /// # use anima::math::Vector;
     /// # use std::f32::consts;
     /// let v1 = Vector::new(1.0, 0.0, 0.0);
-    /// let v2 = Vector::new(0.0, 1.0, 0.0);
+    /// let v2 = Vector::new(0.0, 2.0, 0.0);
     ///
     /// assert_eq!(v1.angle(v2), consts::PI / 2.0);
     /// ```
     pub fn angle(&self, other: Vector) -> f32 {
-        self.dot(other).acos()
+        self.norm().dot(other.norm()).acos()
     }
 
     /// Computes the distance between two vectors.

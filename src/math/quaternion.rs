@@ -89,6 +89,26 @@ impl Quaternion {
         }
     }
 
+    /// Creates a quaternion equivalent to the shortest rotation necessary to move
+    /// the vector representing the direction `start` to the one representing `finish`.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Quaternion;
+    /// # use anima::math::Vector;
+    /// # use std::f32::consts;
+    /// let q = Quaternion::new_sph_rot(Vector::new(1.0, 1.0, 0.0), Vector::new(1.0, 1.0, 1.0));
+    /// let v = Vector::new(-1.0, -1.0, 0.0);
+    ///
+    /// assert_eq!(v.rot(q), Vector::new_unf(-0.8164966));
+    pub fn new_sph_rot(start: Vector, finish: Vector) -> Quaternion {
+        let direction = finish.cross(start);
+        let angle = start.angle(finish);
+
+        Quaternion::new_rot(direction, angle)
+    }
+
     /// Creates an identity (0.0, 0.0, 0.0, 1.0) quaternion.
     ///
     /// # Example
