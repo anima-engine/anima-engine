@@ -161,6 +161,40 @@ impl Quaternion {
             w: self.w / norm
         }
     }
+
+    /// Computes the dot product between two quaternions.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Quaternion;
+    /// let q1 = Quaternion::new(1.0, 2.0, 2.0, 1.0);
+    /// let q2 = Quaternion::new(3.0, 3.0, 1.0, 1.0);
+    ///
+    /// assert_eq!(q1.dot(q2), 12.0);
+    /// ```
+    pub fn dot(&self, other: Quaternion) -> f32 {
+        self.x * other.x +
+        self.y * other.y +
+        self.z * other.z +
+        self.w * other.w
+    }
+
+    /// Computes the angle in radians between two quaternions.
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// # use anima::math::Quaternion;
+    /// # use anima::math::Vector;
+    /// # use std::f32::consts;
+    /// let q = Quaternion::new_rot(Vector::up(), consts::PI / 2.0);
+    ///
+    /// assert_eq!(Quaternion::ident().angle(q), consts::PI / 2.0);
+    /// ```
+    pub fn angle(&self, other: Quaternion) -> f32 {
+        self.dot(other).acos() * 2.0
+    }
 }
 
 use std::ops::Mul;
