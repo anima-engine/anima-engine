@@ -17,6 +17,22 @@
 use math::Quaternion;
 
 /// A simple vector `struct` tailored specifically for graphics.
+///
+/// # Example
+///
+/// ```
+/// # use anima::math::Vector;
+/// let v1 = Vector::zero();
+/// let v2 = Vector::one();
+///
+/// assert_eq!(v1 + v2, Vector::one());
+/// assert_eq!(v1 * v2, Vector::zero());
+/// assert_eq!(v1.dot(v2), 0.0);
+///
+/// let v3 = v1;
+///
+/// assert_eq!(v1.dot(v2), 0.0);
+/// assert_eq!((v3 + Vector::one() * 2.0).dot(v2), 6.0);
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Vector {
     /// `f32` *x* coordinate value

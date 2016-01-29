@@ -18,6 +18,22 @@ use math::Vector;
 use math::Quaternion;
 
 /// A simple matrix `struct` tailored specifically for graphics.
+///
+/// # Example
+///
+/// ```
+/// # use anima::math::Matrix;
+/// # use anima::math::Vector;
+/// let m = Matrix::ident().scale(Vector::new_unf(2.0)).trans(Vector::one());
+///
+/// assert_eq!(m.array[0], 2.0);
+/// assert_eq!(m.array[12], 1.0);
+///
+/// let inv = m.inv();
+///
+/// assert_eq!(m * inv, Matrix::ident());
+/// assert_eq!(inv * m, Matrix::ident());
+/// ```
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Matrix {
     /// `f32` array containing values; columns incremented first
@@ -227,7 +243,7 @@ impl Matrix {
 
         if det == 0.0 { panic!("Matrix {:?} is not invertable.", m); }
 
-        let inv_det = 1.0 / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
+        let inv_det = det.recip();
 
         Matrix {
             array: [

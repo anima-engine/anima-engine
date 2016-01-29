@@ -17,6 +17,26 @@
 use math::Vector;
 
 /// A simple quaterion `struct` tailored specifically for graphics.
+///
+/// # Example
+///
+/// ```
+/// # use anima::math::Quaternion;
+/// # use anima::math::Vector;
+/// use std::f32::consts;
+///
+/// let q1 = Quaternion::new_rot(Vector::up(), consts::PI / 4.0);
+/// let q2 = Quaternion::new_rot(Vector::up(), consts::PI / 2.0);
+///
+/// let q3 = q1 * q1;
+///
+/// let EPSILON = 0.00001;
+///
+/// assert!((q3.x - q2.x).abs() < EPSILON);
+/// assert!((q3.y - q2.y).abs() < EPSILON);
+/// assert!((q3.z - q2.z).abs() < EPSILON);
+/// assert!((q3.w - q2.w).abs() < EPSILON);
+/// ```
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Quaternion {
     /// `f32` imaginary *i* value
