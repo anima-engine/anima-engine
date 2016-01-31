@@ -328,6 +328,7 @@ use std::ops::Sub;
 use std::ops::Mul;
 use std::ops::Neg;
 use std::cmp::Ordering;
+use math::Interpolate;
 
 impl Add for Vector {
     type Output = Vector;
@@ -404,5 +405,15 @@ impl Neg for Vector {
 impl PartialOrd for Vector {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         self.length().partial_cmp(&other.length())
+    }
+}
+
+impl Interpolate for Vector {
+    fn interpolate(&self, other: Vector, ratio: f32) -> Vector {
+        Vector {
+            x: self.x * (1.0 - ratio) + other.x * ratio,
+            y: self.y * (1.0 - ratio) + other.y * ratio,
+            z: self.z * (1.0 - ratio) + other.z * ratio
+        }
     }
 }

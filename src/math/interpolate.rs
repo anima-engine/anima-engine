@@ -14,18 +14,24 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-//! A module containing linear math constructs useful in graphics.
-pub use self::vector::Vector;
-pub use self::quaternion::Quaternion;
-pub use self::matrix::Matrix;
-
-mod vector;
-mod quaternion;
-mod matrix;
-
-pub use self::interpolate::Interpolate;
-pub use self::interpolator::Interpolator;
-pub use self::interpolator::Behavior;
-
-mod interpolate;
-mod interpolator;
+/// A `trait` to be implemented by `struct`ures that need to handle 2-way
+/// interpolation. (not necessarily linear)
+///
+/// # Example
+/// ```
+/// # use anima::math::Interpolate;
+/// struct Object {
+///     height: f32
+/// }
+///
+/// impl Interpolate for Object {
+///     fn interpolate(&self, other: Object, ratio: f32) -> Object {
+///         Object {
+///             height: (1.0 - ratio) * self.height + ratio * other.height
+///         }
+///     }
+/// }
+/// ```
+pub trait Interpolate {
+    fn interpolate(&self, other: Self, ratio: f32) -> Self;
+}

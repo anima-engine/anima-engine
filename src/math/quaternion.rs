@@ -199,6 +199,8 @@ impl Quaternion {
 
 use std::ops::Mul;
 
+use math::Interpolate;
+
 impl Mul for Quaternion {
     type Output = Quaternion;
 
@@ -208,6 +210,26 @@ impl Mul for Quaternion {
             y: other.w * self.y - other.x * self.z + other.y * self.w + other.z * self.x,
             z: other.w * self.z + other.x * self.y - other.y * self.x + other.z * self.w,
             w: other.w * self.w - other.x * self.x - other.y * self.y - other.z * self.z
+        }
+    }
+}
+
+impl Interpolate for Quaternion {
+    fn interpolate(&self, other: Quaternion, ratio: f32) -> Quaternion {
+        let cos_htheta = self.dot(other);
+        let htheta = cos_htheta.acos();
+        let sin_htheta = htheta.sin();
+
+        if sin_htheta == 0.0 { panic!("Cannot interpolate between two opposing rotations."); }
+
+        let ratio1 = ((1.0 - ratio) * htheta).sin() / sin_htheta;
+        let ratio2 = (ratio * htheta).sin() / sin_htheta;
+
+        Quaternion {
+            x: self.x * ratio1 + other.x * ratio2,
+            y: self.y * ratio1 + other.y * ratio2,
+            z: self.z * ratio1 + other.z * ratio2,
+            w: self.w * ratio1 + other.w * ratio2
         }
     }
 }
