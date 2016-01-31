@@ -19,7 +19,7 @@ use math::Quaternion;
 
 /// A simple matrix `struct` tailored specifically for graphics.
 ///
-/// # Example
+/// # Examples
 ///
 /// ```
 /// # use anima::math::Matrix;
@@ -36,14 +36,14 @@ use math::Quaternion;
 /// ```
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Matrix {
-    /// `f32` array containing values; columns incremented first
+    /// `[f32; 16]` containing values; columns incremented first
     pub array: [f32; 16]
 }
 
 impl Matrix {
     /// Creates a matrix using a length 16 array. (columns incremented first)
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Matrix;
@@ -57,7 +57,7 @@ impl Matrix {
 
     /// Creates an identity (1.0 on primary diagonal) matrix.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Matrix;
@@ -79,7 +79,7 @@ impl Matrix {
     /// Translates a matrix according to the scale represented by a vector.
     /// The translation is applied to the left. (`t * m`)
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Matrix;
@@ -118,7 +118,7 @@ impl Matrix {
     /// Scales a matrix according to the scale represented by a vector.
     /// The scaling is applied to the left. (`s * m`)
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Matrix;
@@ -157,7 +157,7 @@ impl Matrix {
     /// Rotates a matrix according to the rotation represented by a quaternion.
     /// The rotation is applied to the left. (`r * m`)
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Matrix;
@@ -198,7 +198,7 @@ impl Matrix {
     /// Rotates a matrix according to the rotation represented by the quaternion around a point.
     /// The rotation is applied to the left. (`r * m`)
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Matrix;
@@ -216,7 +216,7 @@ impl Matrix {
 
     /// Inverts a matrix.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Matrix;

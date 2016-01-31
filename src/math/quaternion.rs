@@ -18,7 +18,7 @@ use math::Vector;
 
 /// A simple quaterion `struct` tailored specifically for graphics.
 ///
-/// # Example
+/// # Examples
 ///
 /// ```
 /// # use anima::math::Quaternion;
@@ -30,7 +30,7 @@ use math::Vector;
 ///
 /// let q3 = q1 * q1;
 ///
-/// let EPSILON = 0.00001;
+/// const EPSILON: f32 = 0.00001;
 ///
 /// assert!((q3.x - q2.x).abs() < EPSILON);
 /// assert!((q3.y - q2.y).abs() < EPSILON);
@@ -52,7 +52,7 @@ pub struct Quaternion {
 impl Quaternion {
     /// Creates a quaternion using 4 values.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Quaternion;
@@ -67,7 +67,7 @@ impl Quaternion {
     /// Creates a quaternion equivalent to a rotation around a direction.
     /// The rotation is measured in radians.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Quaternion;
@@ -92,7 +92,7 @@ impl Quaternion {
     /// Creates a quaternion equivalent to the shortest rotation necessary to move
     /// the vector representing the direction `start` to the one representing `finish`.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Quaternion;
@@ -111,7 +111,7 @@ impl Quaternion {
 
     /// Creates an identity (0.0, 0.0, 0.0, 1.0) quaternion.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Quaternion;
@@ -123,7 +123,7 @@ impl Quaternion {
 
     /// Computes the conjugate of a quaternion.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Quaternion;
@@ -137,7 +137,7 @@ impl Quaternion {
 
     /// Computes the inverse of a quaternion.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Quaternion;
@@ -164,7 +164,7 @@ impl Quaternion {
 
     /// Computes the dot product between two quaternions.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Quaternion;
@@ -182,7 +182,7 @@ impl Quaternion {
 
     /// Computes the angle in radians between two quaternions.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Quaternion;

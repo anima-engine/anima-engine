@@ -18,7 +18,7 @@ use math::Quaternion;
 
 /// A simple vector `struct` tailored specifically for graphics.
 ///
-/// # Example
+/// # Examples
 ///
 /// ```
 /// # use anima::math::Vector;
@@ -46,7 +46,7 @@ pub struct Vector {
 impl Vector {
     /// Creates a vector using 3 values.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -60,7 +60,7 @@ impl Vector {
 
     /// Creates a vector using an array.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -74,7 +74,7 @@ impl Vector {
 
     /// Creates a uniform vector using 1 value.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -88,7 +88,7 @@ impl Vector {
 
     /// Creates a zero (0.0, 0.0, 0.0) Vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -100,7 +100,7 @@ impl Vector {
 
     /// Creates a one (1.0, 1.0, 1.0) Vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -112,7 +112,7 @@ impl Vector {
 
     /// Creates a back (0.0, 0.0, -1.0) Vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -124,7 +124,7 @@ impl Vector {
 
     /// Creates a down (0.0, -1.0, 0.0) Vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -136,7 +136,7 @@ impl Vector {
 
     /// Creates a forward (0.0, 0.0, 1.0) Vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -148,7 +148,7 @@ impl Vector {
 
     /// Creates a left (-1.0, 0.0, 0.0) Vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -160,7 +160,7 @@ impl Vector {
 
     /// Creates a right (1.0, 0.0, 0.0) Vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -172,7 +172,7 @@ impl Vector {
 
     /// Creates an up (0.0, 1.0, 0.0) Vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -184,7 +184,7 @@ impl Vector {
 
     /// Computes the length of a vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -198,7 +198,7 @@ impl Vector {
 
     /// Computes the normalized version of a vector.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -219,7 +219,7 @@ impl Vector {
 
     /// Computes the dot product between two vectors.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -236,7 +236,7 @@ impl Vector {
 
     /// Computes the cross product between two vectors.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -255,7 +255,7 @@ impl Vector {
 
     /// Rotates a vector according to the rotation represented by a quaternion.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -276,7 +276,7 @@ impl Vector {
 
     /// Rotates a vector according to the rotation represented by the quaternion around a point.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -293,7 +293,7 @@ impl Vector {
 
     /// Computes the angle in radians between two vectors.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;
@@ -309,7 +309,7 @@ impl Vector {
 
     /// Computes the distance between two vectors.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Vector;

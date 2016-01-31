@@ -18,7 +18,7 @@ use std::f32::consts;
 
 /// A `struct` useful to easily compute interpolation ratios.
 ///
-/// # Example
+/// # Examples
 ///
 /// ```
 /// # use anima::math::Interpolator;
@@ -53,7 +53,7 @@ use std::f32::consts;
 ///
 /// let qi = q1.interpolate(q2, i.ratio(1.0));
 ///
-/// let EPSILON = 0.00001;
+/// const EPSILON: f32 = 0.00001;
 ///
 /// assert!((q1.angle(qi) - consts::PI / 4.0).abs() < EPSILON);
 /// ```
@@ -83,7 +83,7 @@ pub enum Behavior {
 impl Interpolator {
     /// Creates an interpolator by it's starting time, duration and behavior.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Interpolator;
@@ -102,7 +102,7 @@ impl Interpolator {
 
     /// Computes the ratio (between `0.0` and `1.0`) for some given time.
     ///
-    /// # Example
+    /// # Examples
     ///
     /// ```
     /// # use anima::math::Interpolator;

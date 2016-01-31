@@ -17,7 +17,7 @@
 /// A `trait` to be implemented by `struct`ures that need to handle 2-way
 /// interpolation. (not necessarily linear)
 ///
-/// # Example
+/// # Examples
 /// ```
 /// # use anima::math::Interpolate;
 /// struct Object {
