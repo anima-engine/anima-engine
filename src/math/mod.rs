@@ -15,17 +15,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //! A module containing linear math constructs useful in graphics.
-pub use self::vector::Vector;
-pub use self::quaternion::Quaternion;
-pub use self::matrix::Matrix;
 
 mod vector;
 mod quaternion;
 mod matrix;
 
+mod interpolate;
+mod interpolator;
+
+mod bezier;
+
+pub use self::vector::Vector;
+pub use self::quaternion::Quaternion;
+pub use self::matrix::Matrix;
+
 pub use self::interpolate::Interpolate;
 pub use self::interpolator::Interpolator;
 pub use self::interpolator::Behavior;
 
-mod interpolate;
-mod interpolator;
+pub use self::bezier::Bezier;
