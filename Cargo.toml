@@ -2,6 +2,6 @@
 name = "anima"
 version = "0.1.0"
 description = "The quirky game engine."
-authors = ["Dragos Tiselice <dragostiselice@gmail.com>"]
+authors = ["Dragoș Tiselice <dragostiselice@gmail.com>"]
 keywords = ["game", "engine"]
 license = "LGPL-3.0"
