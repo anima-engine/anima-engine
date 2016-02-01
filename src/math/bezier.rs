@@ -113,4 +113,35 @@ impl Bezier {
             }
         }
     }
+
+    /// Computes the approximated length of a Bézier curve by summing the distances between `steps`
+    /// uniformly distrubuted, consecutive points.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use anima::math::Bezier;
+    /// # use anima::math::Vector;
+    /// # use std::f32::consts;
+    /// // approximation of radius 1.0 circle arc
+    /// let b = Bezier::new_cub(
+    ///     Vector::new(0.0, 0.0, 0.0),
+    ///     Vector::new(0.0, 0.55228, 0.0),
+    ///     Vector::new(0.44772, 1.0, 0.0),
+    ///     Vector::new(1.0, 1.0, 0.0)
+    /// );
+    ///
+    /// const EPSILON: f32 = 0.001;
+    ///
+    /// assert!((b.length(20) - consts::PI / 2.0).abs() < EPSILON);
+    /// ```
+    pub fn length(&self, steps: i32) -> f32 {
+        let (length, _) = (1..steps + 1).fold((0.0, self.v1), |(l, v), i| {
+            let n = self.interpolate((i as f32) / (steps as f32));
+
+            (l + v.dist(n), n)
+        });
+
+        length
+    }
 }
