@@ -303,7 +303,7 @@ impl BezierPath {
             if ratio <= sum + l {
                 true
             } else {
-                sum += *l;
+                sum = sum + l;
 
                 false
             }
@@ -317,7 +317,7 @@ impl BezierPath {
 
                 match (curve, length) {
                     (Some(curve), Some(length)) => {
-                        (curve, (ratio - sum + *length) / length)
+                        (curve, (ratio - sum + length) / length)
                     },
                     _ => panic!("Cannot interpolate an empty path.")
                 }

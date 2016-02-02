@@ -27,7 +27,7 @@ fn test_mul() {
     let mut a1 = [0.0; 16];
     let mut a2 = [0.0; 16];
 
-    for i in (0..16) {
+    for i in 0..16 {
         a1[i] = (i as f32) + 1.0;
         a2[i] = 16.0 - (i as f32);
     }
@@ -70,6 +70,6 @@ fn test_inv() {
 #[should_panic]
 fn test_det_0_panic() {
     let m = Matrix::new([0.0; 16]);
-    
+
     m.inv();
 }
