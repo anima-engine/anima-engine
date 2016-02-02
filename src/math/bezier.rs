@@ -16,7 +16,88 @@
 
 use math::Vector;
 
+/// A `macro` useful for defining Bézier curves.
+///
+/// # Examples
+///
+/// ```
+/// # #[macro_use] extern crate anima;
+/// # use anima::math::Bezier;
+/// # use anima::math::Vector;
+/// fn main() {
+///     let b = bez!(
+///         (0.0, 0.0, 0.0),
+///         (0.0, 0.0, 0.0),
+///         (0.0, 0.0, 0.0),
+///         (0.0, 0.0, 0.0)
+///     );
+/// }
+/// ```
+#[macro_export]
+macro_rules! bez {
+    (
+        ( $x1:expr, $y1:expr, $z1:expr ),
+        ( $x2:expr, $y2:expr, $z2:expr ),
+        ( $x3:expr, $y3:expr, $z3:expr )
+    ) => {
+        Bezier::new_sqr(
+            Vector::new($x1, $y1, $z1),
+            Vector::new($x2, $y2, $z2),
+            Vector::new($x3, $y3, $z3)
+        )
+    };
+
+    (
+        ( $x1:expr, $y1:expr, $z1:expr ),
+        ( $x2:expr, $y2:expr, $z2:expr ),
+        ( $x3:expr, $y3:expr, $z3:expr ),
+        ( $x4:expr, $y4:expr, $z4:expr )
+    ) => {
+        Bezier::new_cub(
+            Vector::new($x1, $y1, $z1),
+            Vector::new($x2, $y2, $z2),
+            Vector::new($x3, $y3, $z3),
+            Vector::new($x4, $y4, $z4)
+        )
+    };
+}
+
+/// A `macro` useful for defining Bézier paths.
+///
+/// # Examples
+///
+/// ```
+/// # #[macro_use] extern crate anima;
+/// # use anima::math::BezierPath;
+/// # use anima::math::Bezier;
+/// # use anima::math::Vector;
+/// fn main() {
+///     let p = path!(
+///         bez!(
+///             (0.0, 0.0, 0.0),
+///             (0.0, 0.0, 0.0),
+///             (0.0, 0.0, 0.0),
+///             (0.0, 0.0, 0.0)
+///         ),
+///         bez!(
+///             (0.0, 0.0, 0.0),
+///             (0.0, 0.0, 0.0),
+///             (0.0, 0.0, 0.0)
+///         )
+///     );
+/// }
+/// ```
+#[macro_export]
+macro_rules! path {
+    ( $( $curve:expr ),* ) => {
+        BezierPath::new(
+            vec![$( $curve ),*]
+        )
+    }
+}
+
 /// A `struct` useful for creating square and cubic Bézier curves.
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Bezier {
     v1: Vector,
     v2: Vector,
@@ -70,7 +151,7 @@ impl Bezier {
         }
     }
 
-    /// Computes the vector on a Bézier curve correspoding to a ratio (between `0.0` and `1.0`).
+    /// Computes the vector on a Bézier curve correspoding to a `ratio` (between `0.0` and `1.0`).
     ///
     /// # Examples
     ///
@@ -143,5 +224,106 @@ impl Bezier {
         });
 
         length
+    }
+}
+
+/// A `struct` useful for creating a path of Bézier curves.
+#[derive(Clone, Debug, PartialEq)]
+pub struct BezierPath {
+    /// `Vec<Bezier>` of curves forming the path
+    pub curves: Vec<Bezier>,
+    /// `Vec<f32>` containing the lengths of the `Bezier` curves with the same indices;
+    /// (normalized so that they add up to `1.0`)
+    pub lengths: Vec<f32>
+}
+
+impl BezierPath {
+    /// Creates a Bézier path using `Bezier` curves. Curves must be connected.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use anima::math::BezierPath;
+    /// # use anima::math::Bezier;
+    /// # use anima::math::Vector;
+    /// let p = BezierPath::new(vec!(Bezier::new_sqr(
+    ///     Vector::new(0.0, 0.0, 0.0),
+    ///     Vector::new(1.0, 0.0, 0.0),
+    ///     Vector::new(2.0, 0.0, 0.0)
+    /// )));
+    ///
+    /// assert_eq!(p, BezierPath {
+    ///     curves: vec!(Bezier::new_sqr(
+    ///         Vector::new(0.0, 0.0, 0.0),
+    ///         Vector::new(1.0, 0.0, 0.0),
+    ///         Vector::new(2.0, 0.0, 0.0)
+    ///     )),
+    ///     lengths: vec!(1.0)
+    /// });
+    /// ```
+    pub fn new(curves: Vec<Bezier>) -> BezierPath {
+        const STEPS: i32 = 20;
+
+        let lengths: Vec<f32> = curves.iter().map(|c| c.length(STEPS)).collect();
+        let sum = lengths.iter().fold(0.0, |s, l| s + l);
+
+        BezierPath {
+            curves: curves,
+            lengths: lengths.iter().map(|l| l / sum).collect()
+        }
+    }
+
+    /// Computes the vector on a Bézier path correspoding to a `ratio` (between `0.0` and `1.0`).
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use anima::math::BezierPath;
+    /// # use anima::math::Bezier;
+    /// # use anima::math::Vector;
+    /// let b1 = Bezier::new_sqr(
+    ///     Vector::new(0.0, 0.0, 0.0),
+    ///     Vector::new(1.0, 1.0, 0.0),
+    ///     Vector::new(2.0, 2.0, 0.0)
+    /// );
+    /// let b2 = Bezier::new_sqr(
+    ///     Vector::new(2.0, 2.0, 0.0),
+    ///     Vector::new(6.0, 6.0, 0.0),
+    ///     Vector::new(10.0, 10.0, 0.0)
+    /// );
+    /// let p = BezierPath::new(vec![b1, b2]);
+    ///
+    /// assert_eq!(p.interpolate(0.5), Vector::new(5.0, 5.0, 0.0));
+    /// assert_eq!(p.interpolate(1.2), Vector::new(12.0, 12.0, 0.0));
+    /// ```
+    pub fn interpolate(&self, ratio: f32) -> Vector {
+        let mut sum = 0.0;
+
+        let curve_length = self.curves.iter().zip(self.lengths.iter()).find(|&(_, l)| {
+            if ratio <= sum + l {
+                true
+            } else {
+                sum += *l;
+
+                false
+            }
+        });
+
+        let (curve, ratio) = match curve_length {
+            Some((curve, length)) => (curve, (ratio - sum) / length),
+            None                  => {
+                let curve = self.curves.last();
+                let length = self.lengths.last();
+
+                match (curve, length) {
+                    (Some(curve), Some(length)) => {
+                        (curve, (ratio - sum + *length) / length)
+                    },
+                    _ => panic!("Cannot interpolate an empty path.")
+                }
+            }
+        };
+
+        curve.interpolate(ratio)
     }
 }

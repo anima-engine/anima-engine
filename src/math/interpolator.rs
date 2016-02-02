@@ -57,7 +57,7 @@ use std::f32::consts;
 ///
 /// assert!((q1.angle(qi) - consts::PI / 4.0).abs() < EPSILON);
 /// ```
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Interpolator {
     /// `f32` specifying the starting time of interpolation (maps to `0.0`)
     pub start: f32,
@@ -68,7 +68,7 @@ pub struct Interpolator {
 }
 
 /// An `enum` containing useful interpolation techniques.
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Behavior {
     /// linear, *i(t) = t*
     Linear,
@@ -81,7 +81,7 @@ pub enum Behavior {
 }
 
 impl Interpolator {
-    /// Creates an interpolator by it's starting time, duration and behavior.
+    /// Creates an interpolator by defining its starting time, duration and behavior.
     ///
     /// # Examples
     ///

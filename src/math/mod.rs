@@ -34,3 +34,4 @@ pub use self::interpolator::Interpolator;
 pub use self::interpolator::Behavior;
 
 pub use self::bezier::Bezier;
+pub use self::bezier::BezierPath;
