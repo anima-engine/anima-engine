@@ -73,9 +73,15 @@ impl Quaternion {
     /// # use anima::math::Quaternion;
     /// # use anima::math::Vector;
     /// # use std::f32::consts;
-    /// let q = Quaternion::new_rot(Vector::up(), consts::PI / 2.0);
+    /// let q1 = Quaternion::new_rot(Vector::up(), consts::PI / 2.0);
+    /// let q2 = Quaternion { x: 0.0, y: 0.70710677, z: 0.0, w: 0.70710677 };
     ///
-    /// assert_eq!(q, Quaternion { x: 0.0, y: 0.70710677, z: 0.0, w: 0.70710677 });
+    /// const EPSILON: f32 = 0.00001;
+    ///
+    /// assert!((q1.x - q2.x).abs() < EPSILON);
+    /// assert!((q1.y - q2.y).abs() < EPSILON);
+    /// assert!((q1.z - q2.z).abs() < EPSILON);
+    /// assert!((q1.w - q2.w).abs() < EPSILON);
     /// ```
     pub fn new_rot(direction: Vector, angle: f32) -> Quaternion {
         let direction = direction.norm();
@@ -97,11 +103,12 @@ impl Quaternion {
     /// ```
     /// # use anima::math::Quaternion;
     /// # use anima::math::Vector;
-    /// # use std::f32::consts;
     /// let q = Quaternion::new_sph_rot(Vector::new(1.0, 1.0, 0.0), Vector::new(1.0, 1.0, 1.0));
     /// let v = Vector::new(-1.0, -1.0, 0.0);
     ///
-    /// assert_eq!(v.rot(q), Vector::new_unf(-0.8164966));
+    /// const EPSILON: f32 = 0.00001;
+    ///
+    /// assert!((v.rot(q) - Vector::new_unf(-0.8164966)).len() < EPSILON);
     pub fn new_sph_rot(start: Vector, finish: Vector) -> Quaternion {
         let direction = finish.cross(start);
         let angle = start.angle(finish);

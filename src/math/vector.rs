@@ -190,9 +190,9 @@ impl Vector {
     /// # use anima::math::Vector;
     /// let v = Vector::new(1.0, 2.0, 2.0);
     ///
-    /// assert_eq!(v.length(), 3.0);
+    /// assert_eq!(v.len(), 3.0);
     /// ```
-    pub fn length(&self) -> f32 {
+    pub fn len(&self) -> f32 {
         (self.x.powi(2) + self.y.powi(2) + self.z.powi(2)).sqrt()
     }
 
@@ -205,10 +205,10 @@ impl Vector {
     /// let v = Vector::new(1.0, 2.0, 2.0);
     /// let n = v.norm();
     ///
-    /// assert_eq!(n.length(), 1.0); // Keep precision in mind when comparing floats.
+    /// assert_eq!(n.len(), 1.0); // Keep precision in mind when comparing floats.
     /// ```
     pub fn norm(&self) -> Vector {
-        let length = self.length();
+        let length = self.len();
 
         Vector {
             x: self.x / length,
@@ -319,7 +319,7 @@ impl Vector {
     /// assert_eq!(v1.dist(v2), 1.0);
     /// ```
     pub fn dist(self, other: Vector) -> f32 {
-        (self - other).length()
+        (self - other).len()
     }
 }
 
@@ -404,7 +404,7 @@ impl Neg for Vector {
 
 impl PartialOrd for Vector {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.length().partial_cmp(&other.length())
+        self.len().partial_cmp(&other.len())
     }
 }
 
