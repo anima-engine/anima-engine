@@ -21,7 +21,7 @@ use math::Quaternion;
 /// # Examples
 ///
 /// ```
-/// # use anima::math::Vector;
+/// # use anima_engine::math::Vector;
 /// let v1 = Vector::zero();
 /// let v2 = Vector::one();
 ///
@@ -49,7 +49,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// let v = Vector::new(0.0, 1.0, 2.0);
     ///
     /// assert_eq!(v, Vector { x: 0.0, y: 1.0, z: 2.0 });
@@ -63,7 +63,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// let v = Vector::new_arr([0.0, 1.0, 2.0]);
     ///
     /// assert_eq!(v, Vector { x: 0.0, y: 1.0, z: 2.0 });
@@ -77,7 +77,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// let v = Vector::new_unf(1.0);
     ///
     /// assert_eq!(v, Vector { x: 1.0, y: 1.0, z: 1.0 });
@@ -91,7 +91,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// assert_eq!(Vector::zero(), Vector { x: 0.0, y: 0.0, z: 0.0 });
     /// ```
     pub fn zero() -> Vector {
@@ -103,7 +103,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// assert_eq!(Vector::one(), Vector { x: 1.0, y: 1.0, z: 1.0 });
     /// ```
     pub fn one() -> Vector {
@@ -115,7 +115,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// assert_eq!(Vector::back(), Vector { x: 0.0, y: 0.0, z: -1.0 });
     /// ```
     pub fn back() -> Vector {
@@ -127,7 +127,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// assert_eq!(Vector::down(), Vector { x: 0.0, y: -1.0, z: 0.0 });
     /// ```
     pub fn down() -> Vector {
@@ -139,7 +139,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// assert_eq!(Vector::forward(), Vector { x: 0.0, y: 0.0, z: 1.0 });
     /// ```
     pub fn forward() -> Vector {
@@ -151,7 +151,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// assert_eq!(Vector::left(), Vector { x: 1.0, y: 0.0, z: 0.0 });
     /// ```
     pub fn left() -> Vector {
@@ -163,7 +163,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// assert_eq!(Vector::right(), Vector { x: -1.0, y: 0.0, z: 0.0 });
     /// ```
     pub fn right() -> Vector {
@@ -175,7 +175,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// assert_eq!(Vector::up(), Vector { x: 0.0, y: 1.0, z: 0.0 });
     /// ```
     pub fn up() -> Vector {
@@ -187,7 +187,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// let v = Vector::new(1.0, 2.0, 2.0);
     ///
     /// assert_eq!(v.len(), 3.0);
@@ -201,7 +201,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// let v = Vector::new(1.0, 2.0, 2.0);
     /// let n = v.norm();
     ///
@@ -222,7 +222,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// let v1 = Vector::new(1.0, 2.0, 2.0);
     /// let v2 = Vector::new(3.0, 3.0, 1.0);
     ///
@@ -239,7 +239,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// let v1 = Vector::new(1.0, 2.0, 2.0);
     /// let v2 = Vector::new(3.0, 3.0, 1.0);
     ///
@@ -258,8 +258,8 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
-    /// # use anima::math::Quaternion;
+    /// # use anima_engine::math::Vector;
+    /// # use anima_engine::math::Quaternion;
     /// let q = Quaternion::new(0.0, 1.0, 0.0, 0.0);
     /// let v = Vector::new(1.0, 0.0, 0.0);
     ///
@@ -279,8 +279,8 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
-    /// # use anima::math::Quaternion;
+    /// # use anima_engine::math::Vector;
+    /// # use anima_engine::math::Quaternion;
     /// let q = Quaternion::new(0.0, 1.0, 0.0, 0.0);
     /// let v = Vector::new(1.0, 0.0, 0.0);
     /// let p = Vector::new(2.0, 0.0, 0.0);
@@ -296,7 +296,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// # use std::f32::consts;
     /// let v1 = Vector::new(1.0, 0.0, 0.0);
     /// let v2 = Vector::new(0.0, 2.0, 0.0);
@@ -312,7 +312,7 @@ impl Vector {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Vector;
     /// let v1 = Vector::new(0.0, 0.0, 0.0);
     /// let v2 = Vector::new(0.0, 1.0, 0.0);
     ///

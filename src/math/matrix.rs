@@ -22,8 +22,8 @@ use math::Quaternion;
 /// # Examples
 ///
 /// ```
-/// # use anima::math::Matrix;
-/// # use anima::math::Vector;
+/// # use anima_engine::math::Matrix;
+/// # use anima_engine::math::Vector;
 /// let m = Matrix::ident().scale(Vector::new_unf(2.0)).trans(Vector::one());
 ///
 /// assert_eq!(m.array[0], 2.0);
@@ -46,7 +46,7 @@ impl Matrix {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Matrix;
+    /// # use anima_engine::math::Matrix;
     /// let m = Matrix::new([1.0; 16]);
     ///
     /// assert_eq!(m, Matrix { array: [1.0; 16] });
@@ -60,7 +60,7 @@ impl Matrix {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Matrix;
+    /// # use anima_engine::math::Matrix;
     /// let m = Matrix::new([2.0; 16]);
     ///
     /// assert_eq!(m * Matrix::ident(), Matrix { array: [2.0; 16] });
@@ -82,8 +82,8 @@ impl Matrix {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Matrix;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Matrix;
+    /// # use anima_engine::math::Vector;
     /// let v = Vector::new_unf(1.0);
     /// let m = Matrix::ident().trans(Vector::new(1.0, 0.0, 1.0));
     ///
@@ -121,8 +121,8 @@ impl Matrix {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Matrix;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Matrix;
+    /// # use anima_engine::math::Vector;
     /// let v = Vector::new_unf(2.0);
     /// let m = Matrix::ident().scale(Vector::new(2.0, 3.0, 4.0));
     ///
@@ -160,9 +160,9 @@ impl Matrix {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Matrix;
-    /// # use anima::math::Vector;
-    /// # use anima::math::Quaternion;
+    /// # use anima_engine::math::Matrix;
+    /// # use anima_engine::math::Vector;
+    /// # use anima_engine::math::Quaternion;
     /// let q = Quaternion::new(0.0, 1.0, 0.0, 0.0);
     /// let v = Vector::new(1.0, 0.0, 0.0);
     ///
@@ -201,9 +201,9 @@ impl Matrix {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Matrix;
-    /// # use anima::math::Vector;
-    /// # use anima::math::Quaternion;
+    /// # use anima_engine::math::Matrix;
+    /// # use anima_engine::math::Vector;
+    /// # use anima_engine::math::Quaternion;
     /// let q = Quaternion::new(0.0, 1.0, 0.0, 0.0);
     /// let v = Vector::new(1.0, 0.0, 0.0);
     /// let p = Vector::new(2.0, 0.0, 0.0);
@@ -219,7 +219,7 @@ impl Matrix {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Matrix;
+    /// # use anima_engine::math::Matrix;
     /// assert_eq!(Matrix::ident().inv(), Matrix::ident());
     /// ```
     pub fn inv(&self) -> Matrix {

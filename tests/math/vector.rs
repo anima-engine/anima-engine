@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate anima;
+extern crate anima_engine;
 
-type Vector = anima::math::Vector;
+use self::anima_engine::math::Vector;
 
 #[test]
 fn test_add() {

@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate anima;
+extern crate anima_engine;
 
-type Quaternion = anima::math::Quaternion;
+use self::anima_engine::math::Quaternion;
 
 #[test]
 fn test_mul() {

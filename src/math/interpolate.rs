@@ -19,7 +19,7 @@
 ///
 /// # Examples
 /// ```
-/// # use anima::math::Interpolate;
+/// # use anima_engine::math::Interpolate;
 /// struct Object {
 ///     height: f32
 /// }

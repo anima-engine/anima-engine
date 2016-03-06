@@ -14,13 +14,11 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-extern crate anima;
+extern crate anima_engine;
 
 use std::f32::consts;
 
-type Matrix = anima::math::Matrix;
-type Vector = anima::math::Vector;
-type Quaternion = anima::math::Quaternion;
+use self::anima_engine::math::{Matrix, Vector, Quaternion};
 
 #[test]
 fn test_mul() {

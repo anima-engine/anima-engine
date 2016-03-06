@@ -21,8 +21,8 @@ use math::Vector;
 /// # Examples
 ///
 /// ```
-/// # use anima::math::Quaternion;
-/// # use anima::math::Vector;
+/// # use anima_engine::math::Quaternion;
+/// # use anima_engine::math::Vector;
 /// use std::f32::consts;
 ///
 /// let q1 = Quaternion::new_rot(Vector::up(), consts::PI / 4.0);
@@ -55,7 +55,7 @@ impl Quaternion {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Quaternion;
+    /// # use anima_engine::math::Quaternion;
     /// let q = Quaternion::new(0.0, 1.0, 2.0, 3.0);
     ///
     /// assert_eq!(q, Quaternion { x: 0.0, y: 1.0, z: 2.0, w: 3.0 });
@@ -70,8 +70,8 @@ impl Quaternion {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Quaternion;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Quaternion;
+    /// # use anima_engine::math::Vector;
     /// # use std::f32::consts;
     /// let q1 = Quaternion::new_rot(Vector::up(), consts::PI / 2.0);
     /// let q2 = Quaternion { x: 0.0, y: 0.70710677, z: 0.0, w: 0.70710677 };
@@ -101,8 +101,8 @@ impl Quaternion {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Quaternion;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Quaternion;
+    /// # use anima_engine::math::Vector;
     /// let q = Quaternion::new_sph_rot(Vector::new(1.0, 1.0, 0.0), Vector::new(1.0, 1.0, 1.0));
     /// let v = Vector::new(-1.0, -1.0, 0.0);
     ///
@@ -121,7 +121,7 @@ impl Quaternion {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Quaternion;
+    /// # use anima_engine::math::Quaternion;
     /// assert_eq!(Quaternion::ident(), Quaternion { x: 0.0, y: 0.0, z: 0.0, w: 1.0 });
     /// ```
     pub fn ident() -> Quaternion {
@@ -133,7 +133,7 @@ impl Quaternion {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Quaternion;
+    /// # use anima_engine::math::Quaternion;
     /// let q = Quaternion::new(1.0, 1.0, 1.0, 1.0);
     ///
     /// assert_eq!(q.conj(), Quaternion { x: -1.0, y: -1.0, z: -1.0, w: 1.0 });
@@ -147,11 +147,11 @@ impl Quaternion {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Quaternion;
-    /// let q = anima::math::Quaternion::new(0.0, 1.0, 2.0, 3.0);
+    /// # use anima_engine::math::Quaternion;
+    /// let q = anima_engine::math::Quaternion::new(0.0, 1.0, 2.0, 3.0);
     ///
     /// let result = q * q.inv();
-    /// let identity = anima::math::Quaternion::ident();
+    /// let identity = anima_engine::math::Quaternion::ident();
     ///
     /// assert_eq!(result.x, identity.x);
     /// ```
@@ -174,7 +174,7 @@ impl Quaternion {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Quaternion;
+    /// # use anima_engine::math::Quaternion;
     /// let q1 = Quaternion::new(1.0, 2.0, 2.0, 1.0);
     /// let q2 = Quaternion::new(3.0, 3.0, 1.0, 1.0);
     ///
@@ -192,8 +192,8 @@ impl Quaternion {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Quaternion;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Quaternion;
+    /// # use anima_engine::math::Vector;
     /// # use std::f32::consts;
     /// let q = Quaternion::new_rot(Vector::up(), consts::PI / 2.0);
     ///

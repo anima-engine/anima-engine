@@ -21,9 +21,9 @@ use math::Vector;
 /// # Examples
 ///
 /// ```
-/// # #[macro_use] extern crate anima;
-/// # use anima::math::Bezier;
-/// # use anima::math::Vector;
+/// # #[macro_use] extern crate anima_engine;
+/// # use anima_engine::math::Bezier;
+/// # use anima_engine::math::Vector;
 /// fn main() {
 ///     let b = bez!(
 ///         (0.0, 0.0, 0.0),
@@ -67,10 +67,10 @@ macro_rules! bez {
 /// # Examples
 ///
 /// ```
-/// # #[macro_use] extern crate anima;
-/// # use anima::math::BezierPath;
-/// # use anima::math::Bezier;
-/// # use anima::math::Vector;
+/// # #[macro_use] extern crate anima_engine;
+/// # use anima_engine::math::BezierPath;
+/// # use anima_engine::math::Bezier;
+/// # use anima_engine::math::Vector;
 /// fn main() {
 ///     let p = path!(
 ///         bez!(
@@ -111,8 +111,8 @@ impl Bezier {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Bezier;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Bezier;
+    /// # use anima_engine::math::Vector;
     /// let b = Bezier::new_sqr(
     ///     Vector::new(0.0, 0.0, 0.0),
     ///     Vector::new(1.0, 1.0, 0.0),
@@ -133,8 +133,8 @@ impl Bezier {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Bezier;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Bezier;
+    /// # use anima_engine::math::Vector;
     /// let b = Bezier::new_cub(
     ///     Vector::new(0.0, 0.0, 0.0),
     ///     Vector::new(0.0, 1.0, 0.0),
@@ -156,8 +156,8 @@ impl Bezier {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Bezier;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Bezier;
+    /// # use anima_engine::math::Vector;
     /// let b = Bezier::new_sqr(
     ///     Vector::new(1.0, 0.0, 0.0),
     ///     Vector::new(1.0, 1.0, 0.0),
@@ -168,8 +168,8 @@ impl Bezier {
     /// ```
     ///
     /// ```
-    /// # use anima::math::Bezier;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Bezier;
+    /// # use anima_engine::math::Vector;
     /// let b = Bezier::new_cub(
     ///     Vector::new(0.0, 0.0, 0.0),
     ///     Vector::new(0.0, 1.0, 0.0),
@@ -201,8 +201,8 @@ impl Bezier {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Bezier;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::Bezier;
+    /// # use anima_engine::math::Vector;
     /// # use std::f32::consts;
     /// // approximation of radius 1.0 circle arc
     /// let b = Bezier::new_cub(
@@ -243,9 +243,9 @@ impl BezierPath {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::BezierPath;
-    /// # use anima::math::Bezier;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::BezierPath;
+    /// # use anima_engine::math::Bezier;
+    /// # use anima_engine::math::Vector;
     /// let p = BezierPath::new(vec!(Bezier::new_sqr(
     ///     Vector::new(0.0, 0.0, 0.0),
     ///     Vector::new(1.0, 0.0, 0.0),
@@ -278,9 +278,9 @@ impl BezierPath {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::BezierPath;
-    /// # use anima::math::Bezier;
-    /// # use anima::math::Vector;
+    /// # use anima_engine::math::BezierPath;
+    /// # use anima_engine::math::Bezier;
+    /// # use anima_engine::math::Vector;
     /// let b1 = Bezier::new_sqr(
     ///     Vector::new(0.0, 0.0, 0.0),
     ///     Vector::new(1.0, 1.0, 0.0),

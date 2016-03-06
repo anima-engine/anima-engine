@@ -21,18 +21,18 @@ use std::f32::consts;
 /// # Examples
 ///
 /// ```
-/// # use anima::math::Interpolator;
-/// # use anima::math::Behavior;
+/// # use anima_engine::math::Interpolator;
+/// # use anima_engine::math::Behavior;
 /// let i = Interpolator::new(10.0, 5.0, Behavior::Linear);
 ///
 /// assert_eq!(i.ratio(12.5), 0.5);
 /// ```
 ///
 /// ```
-/// # use anima::math::Interpolator;
-/// # use anima::math::Behavior;
-/// # use anima::math::Interpolate;
-/// # use anima::math::Vector;
+/// # use anima_engine::math::Interpolator;
+/// # use anima_engine::math::Behavior;
+/// # use anima_engine::math::Interpolate;
+/// # use anima_engine::math::Vector;
 /// let i = Interpolator::new(10.0, 5.0, Behavior::Linear);
 /// let v1 = Vector::new_unf(0.0);
 /// let v2 = Vector::new_unf(2.0);
@@ -41,11 +41,11 @@ use std::f32::consts;
 /// ```
 ///
 /// ```
-/// # use anima::math::Interpolator;
-/// # use anima::math::Behavior;
-/// # use anima::math::Interpolate;
-/// # use anima::math::Quaternion;
-/// # use anima::math::Vector;
+/// # use anima_engine::math::Interpolator;
+/// # use anima_engine::math::Behavior;
+/// # use anima_engine::math::Interpolate;
+/// # use anima_engine::math::Quaternion;
+/// # use anima_engine::math::Vector;
 /// # use std::f32::consts;
 /// let i = Interpolator::new(0.0, 2.0, Behavior::Linear);
 /// let q1 = Quaternion::ident();
@@ -86,8 +86,8 @@ impl Interpolator {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Interpolator;
-    /// # use anima::math::Behavior;
+    /// # use anima_engine::math::Interpolator;
+    /// # use anima_engine::math::Behavior;
     /// let i = Interpolator::new(0.0, 10.0, Behavior::Linear);
     ///
     /// assert_eq!(i, Interpolator { start: 0.0, duration: 10.0, behavior: Behavior::Linear });
@@ -105,8 +105,8 @@ impl Interpolator {
     /// # Examples
     ///
     /// ```
-    /// # use anima::math::Interpolator;
-    /// # use anima::math::Behavior;
+    /// # use anima_engine::math::Interpolator;
+    /// # use anima_engine::math::Behavior;
     /// let lin = Interpolator::new(0.0, 1.0, Behavior::Linear);
     /// let acc = Interpolator::new(0.0, 1.0, Behavior::Acc);
     /// let dec = Interpolator::new(0.0, 1.0, Behavior::Dec);
