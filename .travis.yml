@@ -1,6 +1,8 @@
-sudo: false
-
 language: rust
+sudo: required
+os:
+  - linux
+  - osx
 rust:
   - stable
 git:
@@ -14,5 +16,10 @@ cache:
   directories:
     - $TRAVIS_BUILD_DIR/target
     - $HOME/.cargo
+before_install: ./.travis/before_install_$TRAVIS_OS_NAME.sh
 script:
   - cargo test
+after_success: |
+  if [[ $TRAVIS_OS_NAME =~ linux ]]; then
+    ./.travis/after_success.sh
+  fi
