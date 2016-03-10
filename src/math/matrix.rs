@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-use math::Vector;
-use math::Quaternion;
+use math::{Quaternion, Vector};
 
 /// A simple matrix `struct` tailored specifically for graphics.
 ///
