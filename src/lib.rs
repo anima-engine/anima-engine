@@ -16,4 +16,7 @@
 
 //! The quirky game engine.
 
+#[macro_use]
+extern crate mrusty;
+
 pub mod math;
