@@ -330,6 +330,8 @@ use std::ops::Neg;
 use std::cmp::Ordering;
 use math::Interpolate;
 
+use mrusty::*;
+
 impl Add for Vector {
     type Output = Vector;
 
@@ -416,4 +418,64 @@ impl Interpolate for Vector {
             z: self.z * (1.0 - ratio) + other.z * ratio
         }
     }
+}
+
+impl MRubyFile for Vector {
+    fn require(mruby: MRubyType) {
+        mruby.def_class::<Vector>("Vector");
+
+        mruby.def_method::<Vector, _>("initialize", mrfn!(|_mruby, slf: Value,
+                                                          x: f64, y: f64, z: f64| {
+            let vector = Vector::new(x as f32, y as f32, z as f32);
+
+            slf.init(vector)
+        }));
+
+        mruby.def_class_method::<Vector, _>("from_a", mrfn!(|mruby, _slf: Value, array: Vec| {
+            let x = array[0].to_f64().unwrap();
+            let y = array[1].to_f64().unwrap();
+            let z = array[2].to_f64().unwrap();
+
+            let vector = Vector::new(x as f32, y as f32, z as f32);
+
+            mruby.obj(vector)
+        }));
+
+        mruby.def_method::<Vector, _>("x", mrfn!(|mruby, slf: Vector| {
+            mruby.float(slf.x as f64)
+        }));
+
+        mruby.def_method::<Vector, _>("y", mrfn!(|mruby, slf: Vector| {
+            mruby.float(slf.y as f64)
+        }));
+
+        mruby.def_method::<Vector, _>("z", mrfn!(|mruby, slf: Vector| {
+            mruby.float(slf.z as f64)
+        }));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use mrusty::*;
+
+    use super::Vector;
+
+    describe!(Vector, "
+      context 'when unit' do
+        subject { Vector.new 1.0, 1.0, 1.0 }
+
+        it 'returns 1.0 on #x' do
+          expect(subject.x).to eql 1.0
+        end
+
+        it 'returns 1.0 on #y' do
+          expect(subject.y).to eql 1.0
+        end
+
+        it 'returns 1.0 on #z' do
+          expect(subject.z).to eql 1.0
+        end
+      end
+    ");
 }
