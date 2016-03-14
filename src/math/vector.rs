@@ -441,6 +441,59 @@ impl MRubyFile for Vector {
             mruby.obj(vector)
         }));
 
+        mruby.def_class_method::<Vector, _>("uniform", mrfn!(|mruby, _slf: Value, value: f64| {
+            let value = value as f32;
+            let vector = Vector::new_unf(value);
+
+            mruby.obj(vector)
+        }));
+
+        mruby.def_class_method::<Vector, _>("zero", mrfn!(|mruby, _slf: Value| {
+            mruby.obj(Vector::zero())
+        }));
+
+        mruby.def_class_method::<Vector, _>("one", mrfn!(|mruby, _slf: Value| {
+            mruby.obj(Vector::one())
+        }));
+
+        mruby.def_class_method::<Vector, _>("back", mrfn!(|mruby, _slf: Value| {
+            mruby.obj(Vector::back())
+        }));
+
+        mruby.def_class_method::<Vector, _>("down", mrfn!(|mruby, _slf: Value| {
+            mruby.obj(Vector::down())
+        }));
+
+        mruby.def_class_method::<Vector, _>("forward", mrfn!(|mruby, _slf: Value| {
+            mruby.obj(Vector::forward())
+        }));
+
+        mruby.def_class_method::<Vector, _>("left", mrfn!(|mruby, _slf: Value| {
+            mruby.obj(Vector::left())
+        }));
+
+        mruby.def_class_method::<Vector, _>("right", mrfn!(|mruby, _slf: Value| {
+            mruby.obj(Vector::right())
+        }));
+
+        mruby.def_class_method::<Vector, _>("up", mrfn!(|mruby, _slf: Value| {
+            mruby.obj(Vector::up())
+        }));
+
+        mruby.def_method::<Vector, _>("==", mrfn!(|mruby, slf: Vector, other: Vector| {
+            let result = slf.x == other.x &&
+                         slf.y == other.y &&
+                         slf.z == other.z;
+
+            mruby.bool(result)
+        }));
+
+        mruby.def_method::<Vector, _>("to_s", mrfn!(|mruby, slf: Vector| {
+            let string = format!("<Vector: @x={} @y={} @z={}>", slf.x, slf.y, slf.z);
+
+            mruby.string(&string)
+        }));
+
         mruby.def_method::<Vector, _>("x", mrfn!(|mruby, slf: Vector| {
             mruby.float(slf.x as f64)
         }));
@@ -452,6 +505,22 @@ impl MRubyFile for Vector {
         mruby.def_method::<Vector, _>("z", mrfn!(|mruby, slf: Vector| {
             mruby.float(slf.z as f64)
         }));
+
+        mruby.def_method::<Vector, _>("len", mrfn!(|mruby, slf: Vector| {
+            mruby.float(slf.len() as f64)
+        }));
+
+        mruby.def_method::<Vector, _>("norm", mrfn!(|mruby, slf: Vector| {
+            mruby.obj(slf.norm())
+        }));
+
+        mruby.def_method::<Vector, _>("dot", mrfn!(|mruby, slf: Vector, other: Vector| {
+            mruby.float(slf.dot((*other).clone()) as f64)
+        }));
+
+        mruby.def_method::<Vector, _>("cross", mrfn!(|mruby, slf: Vector, other: Vector| {
+            mruby.obj(slf.cross((*other).clone()))
+        }));
     }
 }
 
@@ -462,8 +531,42 @@ mod tests {
     use super::Vector;
 
     describe!(Vector, "
+      context 'when default' do
+        it 'creates zero vector' do
+          expect(Vector.zero).to eql Vector.uniform 0.0
+        end
+
+        it 'creates one vector' do
+          expect(Vector.one).to eql Vector.uniform 1.0
+        end
+
+        it 'creates back vector' do
+          expect(Vector.back).to eql Vector.new 0.0, 0.0, -1.0
+        end
+
+        it 'creates down vector' do
+          expect(Vector.down).to eql Vector.new 0.0, -1.0, 0.0
+        end
+
+        it 'creates forward vector' do
+          expect(Vector.forward).to eql Vector.new 0.0, 0.0, 1.0
+        end
+
+        it 'creates left vector' do
+          expect(Vector.left).to eql Vector.new 1.0, 0.0, 0.0
+        end
+
+        it 'creates right vector' do
+          expect(Vector.right).to eql Vector.new -1.0, 0.0, 0.0
+        end
+
+        it 'creates up vector' do
+          expect(Vector.up).to eql Vector.new 0.0, 1.0, 0.0
+        end
+      end
+
       context 'when unit' do
-        subject { Vector.new 1.0, 1.0, 1.0 }
+        subject { Vector.uniform 1.0 }
 
         it 'returns 1.0 on #x' do
           expect(subject.x).to eql 1.0
@@ -476,6 +579,36 @@ mod tests {
         it 'returns 1.0 on #z' do
           expect(subject.z).to eql 1.0
         end
+
+        it 'converts to String on #to_s' do
+          expect(subject.to_s).to eql '<Vector: @x=1 @y=1 @z=1>'
+        end
+
+        it 'returns vector length on #len' do
+          expect(subject.len).to be_within(0.000001).of 1.73205
+        end
+
+        it 'returns normalized vector on #norm' do
+          norm = subject.norm
+
+          expect(norm.x).to be_within(0.000001).of 0.57735
+          expect(norm.y).to be_within(0.000001).of 0.57735
+          expect(norm.z).to be_within(0.000001).of 0.57735
+        end
+
+        it 'computes dot product on #dot' do
+          expect(subject.dot(Vector.new 1.0, 2.0, 3.0)).to eql 6.0
+        end
+
+        it 'computes cross product on #cross' do
+          expect(subject.cross(Vector.new 1.0, 2.0, 3.0)).to eql Vector.new 1.0, -2.0, 1.0
+        end
+      end
+
+      context 'when initialized from array' do
+        subject { Vector.from_a [1.0, 2.0, 3.0] }
+
+        it { is_expected.to eql Vector.new 1.0, 2.0, 3.0 }
       end
     ");
 }
