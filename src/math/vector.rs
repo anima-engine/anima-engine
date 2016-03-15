@@ -488,6 +488,37 @@ impl MRubyFile for Vector {
             mruby.bool(result)
         }));
 
+        mruby.def_method::<Vector, _>("+", mrfn!(|mruby, slf: Vector, other: Vector| {
+            mruby.obj((*slf).clone() + (*other).clone())
+        }));
+
+        mruby.def_method::<Vector, _>("-", mrfn!(|mruby, slf: Vector, other: Vector| {
+            mruby.obj((*slf).clone() - (*other).clone())
+        }));
+
+        mruby.def_method::<Vector, _>("*", mrfn!(|mruby, slf: Vector, other: Value| {
+            let class = other.call("class", vec![]).unwrap().call("to_s", vec![]).unwrap();
+            let class = class.to_str().unwrap();
+
+            match class {
+                "Float" => {
+                    let scalar = other.to_f64().unwrap();
+
+                    mruby.obj((*slf).clone() * (scalar as f32))
+                }
+                "Vector" => {
+                    let vector = other.to_obj::<Vector>().unwrap();
+
+                    mruby.obj((*slf).clone() * (*vector).clone())
+                }
+                _ => mruby.raise("TypeError", "expecting Float or Vector")
+            }
+        }));
+
+        mruby.def_method::<Vector, _>("-@", mrfn!(|mruby, slf: Vector| {
+            mruby.obj(-(*slf).clone())
+        }));
+
         mruby.def_method::<Vector, _>("to_s", mrfn!(|mruby, slf: Vector| {
             let string = format!("<Vector: @x={} @y={} @z={}>", slf.x, slf.y, slf.z);
 
@@ -520,6 +551,18 @@ impl MRubyFile for Vector {
 
         mruby.def_method::<Vector, _>("cross", mrfn!(|mruby, slf: Vector, other: Vector| {
             mruby.obj(slf.cross((*other).clone()))
+        }));
+
+        mruby.def_method::<Vector, _>("angle", mrfn!(|mruby, slf: Vector, other: Vector| {
+            mruby.float(slf.angle((*other).clone()) as f64)
+        }));
+
+        mruby.def_method::<Vector, _>("dist", mrfn!(|mruby, slf: Vector, other: Vector| {
+            mruby.float(slf.dist((*other).clone()) as f64)
+        }));
+
+        mruby.def_method::<Vector, _>("<=>", mrfn!(|mruby, slf: Vector, other: Vector| {
+            mruby.float((slf.len() - other.len()) as f64)
         }));
     }
 }
@@ -603,12 +646,49 @@ mod tests {
         it 'computes cross product on #cross' do
           expect(subject.cross(Vector.new 1.0, 2.0, 3.0)).to eql Vector.new 1.0, -2.0, 1.0
         end
+
+        it 'computes angle on #angle' do
+          expect(subject.angle(Vector.new -1.0, -1.0, -1.0)).to be_within(0.01).of 3.14
+        end
+
+        it 'computes distance on #angle' do
+          expect(subject.dist(Vector.new 1.0, -1.0, 1.0)).to eql 2.0
+        end
+
+        it 'adds vectors on #+' do
+          expect(subject + Vector.new(1.0, 2.0, 3.0)).to eql Vector.new 2.0, 3.0, 4.0
+        end
+
+        it 'subtracts vectors on #-' do
+          expect(subject - Vector.new(1.0, 2.0, 3.0)).to eql Vector.new 0.0, -1.0, -2.0
+        end
+
+        it 'multiplies vectors on #*' do
+          expect(subject * Vector.new(1.0, 2.0, 3.0)).to eql Vector.new 1.0, 2.0, 3.0
+        end
+
+        it 'multiplies vector with a scalar on #*' do
+          expect(subject * 2.0).to eql Vector.uniform 2.0
+        end
+
+        it 'return the negative on #-@' do
+          expect(-subject).to eql Vector.uniform -1.0
+        end
       end
 
       context 'when initialized from array' do
         subject { Vector.from_a [1.0, 2.0, 3.0] }
 
         it { is_expected.to eql Vector.new 1.0, 2.0, 3.0 }
+      end
+
+      context 'when in an array' do
+        it 'sorts vectors by their length' do
+          array = [Vector.uniform(2.0), Vector.uniform(3.0), Vector.uniform(1.0)]
+          sorted = [Vector.uniform(1.0), Vector.uniform(2.0), Vector.uniform(3.0)]
+
+          expect(array.sort).to eql sorted
+        end
       end
     ");
 }
