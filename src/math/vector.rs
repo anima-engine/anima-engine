@@ -488,6 +488,12 @@ impl MRubyFile for Vector {
             mruby.bool(result)
         }));
 
+        mruby.def_method::<Vector, _>("to_s", mrfn!(|mruby, slf: Vector| {
+            let string = format!("<Vector: @x={} @y={} @z={}>", slf.x, slf.y, slf.z);
+
+            mruby.string(&string)
+        }));
+
         mruby.def_method::<Vector, _>("+", mrfn!(|mruby, slf: Vector, other: Vector| {
             mruby.obj((*slf).clone() + (*other).clone())
         }));
@@ -517,12 +523,6 @@ impl MRubyFile for Vector {
 
         mruby.def_method::<Vector, _>("-@", mrfn!(|mruby, slf: Vector| {
             mruby.obj(-(*slf).clone())
-        }));
-
-        mruby.def_method::<Vector, _>("to_s", mrfn!(|mruby, slf: Vector| {
-            let string = format!("<Vector: @x={} @y={} @z={}>", slf.x, slf.y, slf.z);
-
-            mruby.string(&string)
         }));
 
         mruby.def_method::<Vector, _>("x", mrfn!(|mruby, slf: Vector| {
