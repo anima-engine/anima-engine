@@ -206,6 +206,8 @@ impl Quaternion {
 
 use std::ops::Mul;
 
+use mrusty::*;
+
 use math::Interpolate;
 
 impl Mul for Quaternion {
@@ -239,4 +241,62 @@ impl Interpolate for Quaternion {
             w: self.w * ratio1 + other.w * ratio2
         }
     }
+}
+
+impl MRubyFile for Quaternion {
+    fn require(mruby: MRubyType) {
+        mruby.def_class::<Quaternion>("Quaternion");
+
+        mruby.def_method::<Quaternion, _>("initialize", mrfn!(|_mruby, slf: Value,
+                                                          x: f64, y: f64, z: f64, w: f64| {
+            let quaternion = Quaternion::new(x as f32, y as f32, z as f32, w as f32);
+
+            slf.init(quaternion)
+        }));
+
+        mruby.def_method::<Quaternion, _>("x", mrfn!(|mruby, slf: Quaternion| {
+            mruby.float(slf.x as f64)
+        }));
+
+        mruby.def_method::<Quaternion, _>("y", mrfn!(|mruby, slf: Quaternion| {
+            mruby.float(slf.y as f64)
+        }));
+
+        mruby.def_method::<Quaternion, _>("z", mrfn!(|mruby, slf: Quaternion| {
+            mruby.float(slf.z as f64)
+        }));
+
+        mruby.def_method::<Quaternion, _>("w", mrfn!(|mruby, slf: Quaternion| {
+            mruby.float(slf.w as f64)
+        }));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use mrusty::*;
+
+    use super::Quaternion;
+
+    describe!(Quaternion, "
+      context 'when unit' do
+        subject { Quaternion.new 1.0, 1.0, 1.0, 1.0 }
+
+        it 'returns x on #x' do
+          expect(subject.x).to eql 1.0
+        end
+
+        it 'returns y on #y' do
+          expect(subject.y).to eql 1.0
+        end
+
+        it 'returns z on #z' do
+          expect(subject.z).to eql 1.0
+        end
+
+        it 'returns w on #w' do
+          expect(subject.w).to eql 1.0
+        end
+      end
+    ");
 }

@@ -611,15 +611,15 @@ mod tests {
       context 'when unit' do
         subject { Vector.uniform 1.0 }
 
-        it 'returns 1.0 on #x' do
+        it 'returns x on #x' do
           expect(subject.x).to eql 1.0
         end
 
-        it 'returns 1.0 on #y' do
+        it 'returns y on #y' do
           expect(subject.y).to eql 1.0
         end
 
-        it 'returns 1.0 on #z' do
+        it 'returns z on #z' do
           expect(subject.z).to eql 1.0
         end
 
