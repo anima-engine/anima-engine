@@ -390,6 +390,10 @@ mod tests {
         it 'computes dot product on #dot' do
           expect(subject.dot subject).to eql 4.0
         end
+
+        it 'multiplies quaternion on #*' do
+          expect(subject * Quaternion.identity).to eql subject
+        end
       end
     ");
 }

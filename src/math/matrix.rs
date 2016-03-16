@@ -269,6 +269,8 @@ impl Matrix {
 
 use std::ops::Mul;
 
+use mrusty::*;
+
 impl Mul<Vector> for Matrix {
     type Output = Vector;
 
@@ -319,4 +321,73 @@ impl Mul<Matrix> for Matrix {
             ]
         }
     }
+}
+
+impl MRubyFile for Matrix {
+    fn require(mruby: MRubyType) {
+        mruby.def_class::<Matrix>("Matrix");
+
+        mruby.def_method::<Matrix, _>("initialize", mrfn!(|_mruby, slf: Value, vec: Vec| {
+            let mut array = [0.0f32; 16];
+
+            for i in 0..16 {
+                array[i] = vec[i].to_f64().unwrap() as f32;
+            }
+
+            slf.init(Matrix::new(array))
+        }));
+
+        mruby.def_class_method::<Matrix, _>("identity", mrfn!(|mruby, _slf: Value| {
+            mruby.obj(Matrix::ident())
+        }));
+
+        mruby.def_method::<Matrix, _>("to_a", mrfn!(|mruby, slf: Matrix| {
+            let vec: Vec<_> = slf.array.iter().map(|value| mruby.float(*value as f64)).collect();
+
+            mruby.array(vec)
+        }));
+
+        mruby.def_method::<Matrix, _>("==", mrfn!(|mruby, slf: Matrix, other: Matrix| {
+            let result = slf.array == other.array;
+
+            mruby.bool(result)
+        }));
+
+        mruby.def_method::<Matrix, _>("*", mrfn!(|mruby, slf: Matrix, other: Value| {
+            let class = other.call("class", vec![]).unwrap().call("to_s", vec![]).unwrap();
+            let class = class.to_str().unwrap();
+
+            match class {
+                "Vector" => {
+                    let vector = other.to_obj::<Vector>().unwrap();
+
+                    mruby.obj((*slf).clone() * (*vector).clone())
+                }
+                "Matrix" => {
+                    let matrix = other.to_obj::<Matrix>().unwrap();
+
+                    mruby.obj((*slf).clone() * (*matrix).clone())
+                }
+                _ => mruby.raise("TypeError", "expecting Vector or Matrix")
+            }
+        }));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use mrusty::*;
+
+    use super::Matrix;
+    use super::super::Vector;
+
+    describe!(Matrix, (Vector), "
+      context 'when identity' do
+        subject { Matrix.identity }
+
+        it 'multiplies matrix on #*' do
+          expect(subject * Matrix.new([2.0] * 16)).to eql Matrix.new([2.0] * 16)
+        end
+      end
+    ");
 }
