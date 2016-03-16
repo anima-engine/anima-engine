@@ -353,6 +353,12 @@ impl MRubyFile for Matrix {
             mruby.bool(result)
         }));
 
+        mruby.def_method::<Matrix, _>("to_s", mrfn!(|mruby, slf: Matrix| {
+            let string = format!("<Matrix: @array={:?}>", slf.array);
+
+            mruby.string(&string)
+        }));
+
         mruby.def_method::<Matrix, _>("*", mrfn!(|mruby, slf: Matrix, other: Value| {
             let class = other.call("class", vec![]).unwrap().call("to_s", vec![]).unwrap();
             let class = class.to_str().unwrap();
@@ -371,6 +377,27 @@ impl MRubyFile for Matrix {
                 _ => mruby.raise("TypeError", "expecting Vector or Matrix")
             }
         }));
+
+        mruby.def_method::<Matrix, _>("trans", mrfn!(|mruby, slf: Matrix, vector: Vector| {
+            mruby.obj(slf.trans((*vector).clone()))
+        }));
+
+        mruby.def_method::<Matrix, _>("scale", mrfn!(|mruby, slf: Matrix, vector: Vector| {
+            mruby.obj(slf.scale((*vector).clone()))
+        }));
+
+        mruby.def_method::<Matrix, _>("rot", mrfn!(|mruby, slf: Matrix, quaternion: Quaternion| {
+            mruby.obj(slf.rot((*quaternion).clone()))
+        }));
+
+        mruby.def_method::<Matrix, _>("rot_around", mrfn!(|mruby, slf: Matrix, quaternion: Quaternion,
+                                                    point: Vector| {
+            mruby.obj(slf.rot_around((*quaternion).clone(), (*point).clone()))
+        }));
+
+        mruby.def_method::<Matrix, _>("inv", mrfn!(|mruby, slf: Matrix| {
+            mruby.obj(slf.inv())
+        }));
     }
 }
 
@@ -380,13 +407,43 @@ mod tests {
 
     use super::Matrix;
     use super::super::Vector;
+    use super::super::Quaternion;
 
-    describe!(Matrix, (Vector), "
+    describe!(Matrix, (Vector, Quaternion), "
       context 'when identity' do
         subject { Matrix.identity }
+        let(:unit) { Vector.uniform 1.0 }
 
         it 'multiplies matrix on #*' do
           expect(subject * Matrix.new([2.0] * 16)).to eql Matrix.new([2.0] * 16)
+        end
+
+        it 'adds translation to a matrix on #trans' do
+          expect(subject.trans(Vector.uniform(1.0)) * unit).to eql Vector.uniform 2.0
+        end
+
+        it 'adds scaling to a matrix on #scale' do
+          expect(subject.scale(Vector.uniform(2.0)) * unit).to eql Vector.uniform 2.0
+        end
+
+        it 'adds rotation to a matrix on #rot' do
+          rotated = subject.rot(Quaternion.rotation(Vector.up, Math::PI)) * unit
+
+          expect(rotated.x).to be_within(0.000001).of -1.0
+          expect(rotated.y).to be_within(0.000001).of  1.0
+          expect(rotated.z).to be_within(0.000001).of -1.0
+        end
+
+        it 'adds rotation around a point to a matrix on #rot_around' do
+          rotated = subject.rot_around(Quaternion.rotation(Vector.up, Math::PI), Vector.left) * unit
+
+          expect(rotated.x).to be_within(0.000001).of  1.0
+          expect(rotated.y).to be_within(0.000001).of  1.0
+          expect(rotated.z).to be_within(0.000001).of -1.0
+        end
+
+        it 'computes inverse on #inv' do
+          expect(subject.scale(Vector.uniform(2.0)).inv * unit).to eql Vector.uniform 0.5
         end
       end
     ");
