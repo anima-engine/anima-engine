@@ -266,10 +266,9 @@ impl Vector {
     /// assert_eq!(v.rot(q), Vector { x: -1.0, y: 0.0, z: 0.0 });
     /// ```
     pub fn rot(&self, quaternion: Quaternion) -> Vector {
-        let conjugate = quaternion.conj();
         let result = quaternion *
                      Quaternion::new(self.x, self.y, self.z, 0.0) *
-                     conjugate;
+                     quaternion.conj();
 
         Vector { x: result.x, y: result.y, z: result.z }
     }
@@ -553,6 +552,15 @@ impl MRubyFile for Vector {
             mruby.obj(slf.cross((*other).clone()))
         }));
 
+        mruby.def_method::<Vector, _>("rot", mrfn!(|mruby, slf: Vector, quternion: Quaternion| {
+            mruby.obj(slf.rot((*quternion).clone()))
+        }));
+
+        mruby.def_method::<Vector, _>("rot_around", mrfn!(|mruby, slf: Vector,
+                                                           quternion: Quaternion, point: Vector| {
+            mruby.obj(slf.rot_around((*quternion).clone(), (*point).clone()))
+        }));
+
         mruby.def_method::<Vector, _>("angle", mrfn!(|mruby, slf: Vector, other: Vector| {
             mruby.float(slf.angle((*other).clone()) as f64)
         }));
@@ -572,8 +580,9 @@ mod tests {
     use mrusty::*;
 
     use super::Vector;
+    use super::super::Quaternion;
 
-    describe!(Vector, "
+    describe!(Vector, (Quaternion), "
       context 'when default' do
         it 'creates zero vector' do
           expect(Vector.zero).to eql Vector.uniform 0.0
@@ -645,6 +654,23 @@ mod tests {
 
         it 'computes cross product on #cross' do
           expect(subject.cross(Vector.new 1.0, 2.0, 3.0)).to eql Vector.new 1.0, -2.0, 1.0
+        end
+
+        it 'rotates on #rot' do
+          up = subject.cross(Vector.new(-1.0, 0.0, 1.0))
+          rotated = subject.rot Quaternion.rotation(up, Math::PI)
+
+          expect(rotated.x).to be_within(0.000001).of -1.0
+          expect(rotated.y).to be_within(0.000001).of -1.0
+          expect(rotated.z).to be_within(0.000001).of -1.0
+        end
+
+        it 'rotates around a point on #rot_around' do
+          rotated = subject.rot_around(Quaternion.rotation(Vector.up, Math::PI), subject)
+
+          expect(rotated.x).to be_within(0.000001).of 1.0
+          expect(rotated.y).to be_within(0.000001).of 1.0
+          expect(rotated.z).to be_within(0.000001).of 1.0
         end
 
         it 'computes angle on #angle' do
