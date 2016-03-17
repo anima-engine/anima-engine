@@ -248,7 +248,7 @@ impl MRubyFile for Quaternion {
         mruby.def_class::<Quaternion>("Quaternion");
 
         mruby.def_method::<Quaternion, _>("initialize", mrfn!(|_mruby, slf: Value,
-                                                          x: f64, y: f64, z: f64, w: f64| {
+                                                               x: f64, y: f64, z: f64, w: f64| {
             let quaternion = Quaternion::new(x as f32, y as f32, z as f32, w as f32);
 
             slf.init(quaternion)
@@ -324,6 +324,11 @@ impl MRubyFile for Quaternion {
         mruby.def_method::<Quaternion, _>("angle", mrfn!(|mruby, slf: Quaternion, other: Quaternion| {
             mruby.float(slf.angle((*other).clone()) as f64)
         }));
+
+        mruby.def_method::<Quaternion, _>("interpolate", mrfn!(|mruby, slf: Quaternion,
+                                                                other: Quaternion, ratio: f64| {
+            mruby.obj(slf.interpolate((*other).clone(), ratio as f32))
+        }));
     }
 }
 
@@ -357,6 +362,16 @@ mod tests {
 
         it 'computes angle on #angle' do
           expect(subject.angle Quaternion.identity).to be_within(0.000001).of Math::PI / 2
+        end
+
+        it 'interpolates on #interpolate' do
+          interpolated = subject.interpolate(Quaternion.rotation(Vector.up, Math::PI), 0.5)
+          correct = Quaternion.rotation(Vector.up, Math::PI * 3 / 4)
+
+          expect(interpolated.x).to be_within(0.001).of correct.x
+          expect(interpolated.y).to be_within(0.001).of correct.y
+          expect(interpolated.z).to be_within(0.001).of correct.z
+          expect(interpolated.w).to be_within(0.001).of correct.w
         end
       end
 

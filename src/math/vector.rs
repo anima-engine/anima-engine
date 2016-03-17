@@ -572,6 +572,11 @@ impl MRubyFile for Vector {
         mruby.def_method::<Vector, _>("<=>", mrfn!(|mruby, slf: Vector, other: Vector| {
             mruby.float((slf.len() - other.len()) as f64)
         }));
+
+        mruby.def_method::<Vector, _>("interpolate", mrfn!(|mruby, slf: Vector, other: Vector,
+                                                            ratio: f64| {
+            mruby.obj(slf.interpolate((*other).clone(), ratio as f32))
+        }));
     }
 }
 
@@ -697,8 +702,12 @@ mod tests {
           expect(subject * 2.0).to eql Vector.uniform 2.0
         end
 
-        it 'return the negative on #-@' do
+        it 'returns the negative on #-@' do
           expect(-subject).to eql Vector.uniform -1.0
+        end
+
+        it 'interpolates on #interpolate' do
+          expect(subject.interpolate(Vector.uniform(3.0), 0.5)).to eql Vector.uniform 2.0
         end
       end
 

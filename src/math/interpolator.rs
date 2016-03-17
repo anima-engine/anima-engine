@@ -132,3 +132,75 @@ impl Interpolator {
         (time - self.start) / self.duration
     }
 }
+
+use mrusty::*;
+
+impl MRubyFile for Interpolator {
+    fn require(mruby: MRubyType) {
+        mruby.def_class::<Interpolator>("Interpolator");
+
+        mruby.def_method::<Interpolator, _>("initialize", mrfn!(|mruby, slf: Value,
+                                                                 start: f64, duration: f64,
+                                                                 behavior: Value| {
+            let behavior = match behavior.call_unchecked("to_s", vec![]).to_str().unwrap() {
+                "linear" => Behavior::Linear,
+                "acc"    => Behavior::Acc,
+                "dec"    => Behavior::Dec,
+                "accdec" => Behavior::AccDec,
+                _        => {
+                    return mruby.raise("ArgumentError",
+                                       "behavior must be one of :linear, :acc, :dec, :accdec")
+                }
+            };
+
+            let interpolator = Interpolator::new(start as f32, duration as f32, behavior);
+
+            slf.init(interpolator)
+        }));
+
+        mruby.def_method::<Interpolator, _>("ratio", mrfn!(|mruby, slf: Interpolator, ratio: f64| {
+            mruby.float(slf.ratio(ratio as f32) as f64)
+        }));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use mrusty::*;
+
+    use super::Interpolator;
+
+    describe!(Interpolator, "
+      context 'when linear' do
+        subject { Interpolator.new 0.0, 1.0, :linear }
+
+        it 'interpolates linearly on #ratio' do
+          expect(subject.ratio 0.25).to eql 0.25
+        end
+      end
+
+      context 'when accelerate' do
+        subject { Interpolator.new 0.0, 1.0, :acc }
+
+        it 'interpolates acceleratingly on #ratio' do
+          expect(subject.ratio 0.25).to eql 0.0625
+        end
+      end
+
+      context 'when decelerate' do
+        subject { Interpolator.new 0.0, 1.0, :dec }
+
+        it 'interpolates deceleratingly on #ratio' do
+          expect(subject.ratio 0.25).to eql 0.4375
+        end
+      end
+
+      context 'when accelerate-decelerate' do
+        subject { Interpolator.new 0.0, 1.0, :accdec }
+
+        it 'interpolates accelerate-deceleratingly on #ratio' do
+          expect(subject.ratio 0.25).to be_within(0.000001).of 0.146446
+        end
+      end
+    ");
+}
