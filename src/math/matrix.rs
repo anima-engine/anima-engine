@@ -360,10 +360,7 @@ impl MRubyFile for Matrix {
         }));
 
         mruby.def_method::<Matrix, _>("*", mrfn!(|mruby, slf: Matrix, other: Value| {
-            let class = other.call("class", vec![]).unwrap().call("to_s", vec![]).unwrap();
-            let class = class.to_str().unwrap();
-
-            match class {
+            match other.type_name() {
                 "Vector" => {
                     let vector = other.to_obj::<Vector>().unwrap();
 

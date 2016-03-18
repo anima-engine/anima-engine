@@ -502,10 +502,7 @@ impl MRubyFile for Vector {
         }));
 
         mruby.def_method::<Vector, _>("*", mrfn!(|mruby, slf: Vector, other: Value| {
-            let class = other.call("class", vec![]).unwrap().call("to_s", vec![]).unwrap();
-            let class = class.to_str().unwrap();
-
-            match class {
+            match other.type_name() {
                 "Float" => {
                     let scalar = other.to_f64().unwrap();
 
