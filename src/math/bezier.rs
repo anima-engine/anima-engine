@@ -396,8 +396,115 @@ impl BezierPath {
     }
 }
 
+mrclass!(BezierPath, {
+    def!("initialize", |mruby, curves: Vec| {
+        let mut beziers = Vec::with_capacity(curves.len());
+
+        for curve in curves {
+            let curve = match curve.type_name() {
+                "Bezier" => (*curve.to_obj::<Bezier>().unwrap()).clone(),
+                "Array"  => {
+                    fn to_vector(mruby: MrubyType, value: &Value) -> Result<Vector, Value> {
+                        match value.type_name() {
+                            "Vector" => Ok((*value.to_obj::<Vector>().unwrap()).clone()),
+                            "Array"  => {
+                                let array = value.to_vec().unwrap();
+
+                                let x = array[0].to_f64().unwrap();
+                                let y = array[1].to_f64().unwrap();
+                                let z = array[2].to_f64().unwrap();
+
+                                Ok(Vector::new(x as f32, y as f32, z as f32))
+                            }
+                            _ => Err(mruby.raise("ArgumentError",
+                                                 "Array should contain Vector or Array"))
+                        }
+                    }
+
+                    let array = curve.to_vec().unwrap();
+
+                    match array.len() {
+                        3 => {
+                            Bezier::new_sqr(
+                                match to_vector(mruby.clone(), &array[0]) {
+                                    Ok(v)  => v,
+                                    Err(v) => {
+                                        return v;
+                                    }
+                                },
+                                match to_vector(mruby.clone(), &array[1]) {
+                                    Ok(v)  => v,
+                                    Err(v) => {
+                                        return v;
+                                    }
+                                },
+                                match to_vector(mruby.clone(), &array[2]) {
+                                    Ok(v)  => v,
+                                    Err(v) => {
+                                        return v;
+                                    }
+                                }
+                            )
+                        }
+                        4 => {
+                            Bezier::new_cub(
+                                match to_vector(mruby.clone(), &array[0]) {
+                                    Ok(v)  => v,
+                                    Err(v) => {
+                                        return v;
+                                    }
+                                },
+                                match to_vector(mruby.clone(), &array[1]) {
+                                    Ok(v)  => v,
+                                    Err(v) => {
+                                        return v;
+                                    }
+                                },
+                                match to_vector(mruby.clone(), &array[2]) {
+                                    Ok(v)  => v,
+                                    Err(v) => {
+                                        return v;
+                                    }
+                                },
+                                match to_vector(mruby.clone(), &array[3]) {
+                                    Ok(v)  => v,
+                                    Err(v) => {
+                                        return v;
+                                    }
+                                }
+                            )
+                        }
+                        _ => {
+                            return mruby.raise("ArgumentError", "Array should contain 3-4 items")
+                        }
+                    }
+                },
+                _ => {
+                    return mruby.raise("ArgumentError", "pass Array of Bezier or Array")
+                }
+            };
+
+            beziers.push(curve);
+        }
+
+        BezierPath::new(beziers)
+    });
+
+    def!("interpolate", |mruby, slf: BezierPath, ratio: f64| {
+        mruby.obj(slf.interpolate(ratio as f32))
+    });
+
+    def!("length", |mruby, slf: BezierPath; args| {
+        match args.len() {
+            0 => mruby.float(slf.len(20) as f64),
+            1 => mruby.float(slf.len(args[0].to_i32().unwrap()) as f64),
+            _ => mruby.raise("ArgumentError", "wrong number of arguments")
+        }
+    });
+});
+
 #[cfg(test)]
-mod tests {
+mod test_bezier {
     use mrusty::*;
 
     use super::Bezier;
@@ -417,6 +524,63 @@ mod tests {
 
         it 'returns approximated length on #length with custom number of steps' do
           expect(subject.length 10).to be_within(0.01).of 1.950975
+        end
+      end
+    ");
+}
+
+#[cfg(test)]
+mod test_bezier_path {
+    use mrusty::*;
+
+    use super::Bezier;
+    use super::BezierPath;
+    use super::super::Vector;
+
+    describe!(BezierPath, (Bezier, Vector), "
+      context 'when initialized in all possible ways' do
+        subject do
+          BezierPath.new [
+            [
+              [1.0, 1.0, 1.0],
+              [1.0, 1.0, 1.0],
+              Vector.uniform(1.0)
+            ],
+            Bezier.new(
+                Vector.uniform(1.0),
+                Vector.uniform(1.0),
+                Vector.uniform(1.0)
+            )
+          ]
+        end
+
+        it 'returns approximated length on #length' do
+          expect(subject.length).to be_within(0.00001).of 0.0
+        end
+      end
+
+      context 'when formed of two curves' do
+        subject do
+          BezierPath.new [
+            [
+              [0.0, 0.0, 0.0],
+              [1.0, 1.0, 0.0],
+              [2.0, 2.0, 0.0]
+            ],
+            [
+              [2.0, 2.0, 0.0],
+              [6.0, 6.0, 0.0],
+              [10.0, 10.0, 0.0]
+            ]
+          ]
+        end
+
+        it 'interpolates Vectors on #interpolate' do
+          interpolated = subject.interpolate 0.5
+
+          expect(interpolated.x).to be_within(0.000001).of 5.0
+          expect(interpolated.y).to be_within(0.000001).of 5.0
+          expect(interpolated.z).to be_within(0.000001).of 0.0
         end
       end
     ");

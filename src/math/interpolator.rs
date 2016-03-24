@@ -170,6 +170,14 @@ mrclass!(Interpolator, {
         mruby.string(behavior).call_unchecked("to_sym", vec![])
     });
 
+    def!("==", |mruby, slf: Interpolator, other: Interpolator| {
+        let result = slf.start == other.start &&
+                     slf.duration == other.duration &&
+                     slf.behavior == other.behavior;
+
+        mruby.bool(result)
+    });
+
     def!("to_s", |mruby, slf: Interpolator| {
         let behavior = match slf.behavior {
             Behavior::Linear => "linear",
@@ -198,6 +206,8 @@ mod tests {
     describe!(Interpolator, "
       context 'when linear' do
         subject { Interpolator.new 0.0, 1.0, :linear }
+
+        it { is_expected.to eql Interpolator.new(0.0, 1.0, :linear) }
 
         it 'interpolates linearly on #ratio' do
           expect(subject.ratio 0.25).to eql 0.25
