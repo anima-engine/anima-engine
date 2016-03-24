@@ -206,6 +206,8 @@ impl Quaternion {
 
 use std::ops::Mul;
 
+use mrusty::*;
+
 use math::Interpolate;
 
 impl Mul for Quaternion {
@@ -239,4 +241,167 @@ impl Interpolate for Quaternion {
             w: self.w * ratio1 + other.w * ratio2
         }
     }
+}
+
+mrclass!(Quaternion, {
+    def!("initialize", |x: f64, y: f64, z: f64, w: f64| {
+        Quaternion::new(x as f32, y as f32, z as f32, w as f32)
+    });
+
+    def_self!("rotation", |mruby, _slf: Value, direction: Vector, angle: f64| {
+        let quaternion = Quaternion::new_rot((*direction).clone(), angle as f32);
+
+        mruby.obj(quaternion)
+    });
+
+    def_self!("sph_rotation", |mruby, _slf: Value, start: Vector, finish: Vector| {
+        let quaternion = Quaternion::new_sph_rot((*start).clone(), (*finish).clone());
+
+        mruby.obj(quaternion)
+    });
+
+    def_self!("identity", |mruby, _slf: Value| {
+        mruby.obj(Quaternion::ident())
+    });
+
+    def!("x", |mruby, slf: Quaternion| {
+        mruby.float(slf.x as f64)
+    });
+
+    def!("y", |mruby, slf: Quaternion| {
+        mruby.float(slf.y as f64)
+    });
+
+    def!("z", |mruby, slf: Quaternion| {
+        mruby.float(slf.z as f64)
+    });
+
+    def!("w", |mruby, slf: Quaternion| {
+        mruby.float(slf.w as f64)
+    });
+
+    def!("==", |mruby, slf: Quaternion, other: Quaternion| {
+        let result = slf.x == other.x &&
+                     slf.y == other.y &&
+                     slf.z == other.z &&
+                     slf.w == other.w;
+
+        mruby.bool(result)
+    });
+
+    def!("to_s", |mruby, slf: Quaternion| {
+        let string = format!("<Quaternion: @x={} @y={} @z={} @w={}>",
+                             slf.x, slf.y, slf.z, slf.w);
+
+        mruby.string(&string)
+    });
+
+    def!("*", |mruby, slf: Quaternion, other: Quaternion| {
+        mruby.obj((*slf).clone() * (*other).clone())
+    });
+
+    def!("conj", |mruby, slf: Quaternion| {
+        mruby.obj(slf.conj())
+    });
+
+    def!("inv", |mruby, slf: Quaternion| {
+        mruby.obj(slf.inv())
+    });
+
+    def!("dot", |mruby, slf: Quaternion, other: Quaternion| {
+        mruby.float(slf.dot((*other).clone()) as f64)
+    });
+
+    def!("angle", |mruby, slf: Quaternion, other: Quaternion| {
+        mruby.float(slf.angle((*other).clone()) as f64)
+    });
+
+    def!("interpolate", |mruby, slf: Quaternion, other: Quaternion, ratio: f64| {
+        mruby.obj(slf.interpolate((*other).clone(), ratio as f32))
+    });
+});
+
+#[cfg(test)]
+mod tests {
+    use mrusty::*;
+
+    use super::Quaternion;
+    use super::super::Vector;
+
+    describe!(Quaternion, (Vector), "
+      context 'when roation' do
+        subject { Quaternion.rotation(Vector.up, Math::PI / 2) }
+        let(:second) { Quaternion.sph_rotation(Vector.forward, Vector.right) }
+
+        it 'returns x on #x' do
+          expect(subject.x).to be_within(0.001).of second.x
+        end
+
+        it 'returns y on #y' do
+          expect(subject.y).to be_within(0.001).of second.y
+        end
+
+        it 'returns z on #z' do
+          expect(subject.z).to be_within(0.001).of second.z
+        end
+
+        it 'returns w on #w' do
+          expect(subject.w).to be_within(0.001).of second.w
+        end
+
+        it 'computes angle on #angle' do
+          expect(subject.angle Quaternion.identity).to be_within(0.000001).of Math::PI / 2
+        end
+
+        it 'interpolates on #interpolate' do
+          interpolated = subject.interpolate(Quaternion.rotation(Vector.up, Math::PI), 0.5)
+          correct = Quaternion.rotation(Vector.up, Math::PI * 3 / 4)
+
+          expect(interpolated.x).to be_within(0.001).of correct.x
+          expect(interpolated.y).to be_within(0.001).of correct.y
+          expect(interpolated.z).to be_within(0.001).of correct.z
+          expect(interpolated.w).to be_within(0.001).of correct.w
+        end
+      end
+
+      context 'when unit' do
+        subject { Quaternion.new 1.0, 1.0, 1.0, 1.0 }
+
+        it 'returns x on #x' do
+          expect(subject.x).to eql 1.0
+        end
+
+        it 'returns y on #y' do
+          expect(subject.y).to eql 1.0
+        end
+
+        it 'returns z on #z' do
+          expect(subject.z).to eql 1.0
+        end
+
+        it 'returns w on #w' do
+          expect(subject.w).to eql 1.0
+        end
+
+        it 'converts to String on #to_s' do
+          expect(subject.to_s).to eql '<Quaternion: @x=1 @y=1 @z=1 @w=1>'
+        end
+
+        it 'returns inverse on #inv' do
+          expect(subject * subject.inv).to eql Quaternion.identity
+        end
+
+        it 'returns conjugate on #conj' do
+          expect(subject.conj).to eql Quaternion.new -1.0, -1.0, -1.0, 1.0
+        end
+
+        it 'computes dot product on #dot' do
+          expect(subject.dot subject).to eql 4.0
+        end
+
+        it 'multiplies quaternion on #*' do
+          expect(subject * Quaternion.identity).to eql subject
+        end
+      end
+    ");
 }

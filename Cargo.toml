@@ -5,3 +5,6 @@ description = "The quirky game engine."
 authors = ["Dragoș Tiselice <dragostiselice@gmail.com>", "Robert Krody <krody.robi@gmail.com>"]
 keywords = ["anima", "anima-engine", "game", "engine"]
 license = "LGPL-3.0"
+
+[dependencies]
+mrusty = "0.3.0"
