@@ -135,34 +135,59 @@ impl Interpolator {
 
 use mrusty::*;
 
-impl MRubyFile for Interpolator {
-    fn require(mruby: MRubyType) {
-        mruby.def_class::<Interpolator>("Interpolator");
+mrclass!(Interpolator, {
+    def!("initialize", |mruby, start: f64, duration: f64, behavior: Value| {
+        let behavior = match behavior.call_unchecked("to_s", vec![]).to_str().unwrap() {
+            "linear" => Behavior::Linear,
+            "acc"    => Behavior::Acc,
+            "dec"    => Behavior::Dec,
+            "accdec" => Behavior::AccDec,
+            _        => {
+                return mruby.raise("ArgumentError",
+                                   "behavior must be one of :linear, :acc, :dec, :accdec")
+            }
+        };
 
-        mruby.def_method::<Interpolator, _>("initialize", mrfn!(|mruby, slf: Value,
-                                                                 start: f64, duration: f64,
-                                                                 behavior: Value| {
-            let behavior = match behavior.call_unchecked("to_s", vec![]).to_str().unwrap() {
-                "linear" => Behavior::Linear,
-                "acc"    => Behavior::Acc,
-                "dec"    => Behavior::Dec,
-                "accdec" => Behavior::AccDec,
-                _        => {
-                    return mruby.raise("ArgumentError",
-                                       "behavior must be one of :linear, :acc, :dec, :accdec")
-                }
-            };
+        Interpolator::new(start as f32, duration as f32, behavior)
+    });
 
-            let interpolator = Interpolator::new(start as f32, duration as f32, behavior);
+    def!("start", |mruby, slf: Interpolator| {
+        mruby.float(slf.start as f64)
+    });
 
-            slf.init(interpolator)
-        }));
+    def!("duration", |mruby, slf: Interpolator| {
+        mruby.float(slf.duration as f64)
+    });
 
-        mruby.def_method::<Interpolator, _>("ratio", mrfn!(|mruby, slf: Interpolator, ratio: f64| {
-            mruby.float(slf.ratio(ratio as f32) as f64)
-        }));
-    }
-}
+    def!("behavior", |mruby, slf: Interpolator| {
+        let behavior = match slf.behavior {
+            Behavior::Linear => "linear",
+            Behavior::Acc    => "acc",
+            Behavior::Dec    => "dec",
+            Behavior::AccDec => "accdec"
+        };
+
+        mruby.string(behavior).call_unchecked("to_sym", vec![])
+    });
+
+    def!("to_s", |mruby, slf: Interpolator| {
+        let behavior = match slf.behavior {
+            Behavior::Linear => "linear",
+            Behavior::Acc    => "acc",
+            Behavior::Dec    => "dec",
+            Behavior::AccDec => "accdec"
+        };
+
+        let string = format!("<Interpolator: @start={} @duration={} @behavior=:{}>",
+                             slf.start, slf.duration, behavior);
+
+        mruby.string(&string)
+    });
+
+    def!("ratio", |mruby, slf: Interpolator, ratio: f64| {
+        mruby.float(slf.ratio(ratio as f32) as f64)
+    });
+});
 
 #[cfg(test)]
 mod tests {
@@ -176,6 +201,22 @@ mod tests {
 
         it 'interpolates linearly on #ratio' do
           expect(subject.ratio 0.25).to eql 0.25
+        end
+
+        it 'returns start on #start' do
+          expect(subject.start).to eql 0.0
+        end
+
+        it 'returns duration on #duration' do
+          expect(subject.duration).to eql 1.0
+        end
+
+        it 'returns behavior on #behavior' do
+          expect(subject.behavior).to eql :linear
+        end
+
+        it 'converts to String on #to_s' do
+          expect(subject.to_s).to eql '<Interpolator: @start=0 @duration=1 @behavior=:linear>'
         end
       end
 

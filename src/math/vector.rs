@@ -419,163 +419,154 @@ impl Interpolate for Vector {
     }
 }
 
-impl MRubyFile for Vector {
-    fn require(mruby: MRubyType) {
-        mruby.def_class::<Vector>("Vector");
+mrclass!(Vector, {
+    def!("initialize", |x: f64, y: f64, z: f64| {
+        Vector::new(x as f32, y as f32, z as f32)
+    });
 
-        mruby.def_method::<Vector, _>("initialize", mrfn!(|_mruby, slf: Value,
-                                                          x: f64, y: f64, z: f64| {
-            let vector = Vector::new(x as f32, y as f32, z as f32);
+    def_self!("from_a", |mruby, _slf: Value, array: Vec| {
+        let x = array[0].to_f64().unwrap();
+        let y = array[1].to_f64().unwrap();
+        let z = array[2].to_f64().unwrap();
 
-            slf.init(vector)
-        }));
+        let vector = Vector::new(x as f32, y as f32, z as f32);
 
-        mruby.def_class_method::<Vector, _>("from_a", mrfn!(|mruby, _slf: Value, array: Vec| {
-            let x = array[0].to_f64().unwrap();
-            let y = array[1].to_f64().unwrap();
-            let z = array[2].to_f64().unwrap();
+        mruby.obj(vector)
+    });
 
-            let vector = Vector::new(x as f32, y as f32, z as f32);
+    def_self!("uniform", |mruby, _slf: Value, value: f64| {
+        let value = value as f32;
+        let vector = Vector::new_unf(value);
 
-            mruby.obj(vector)
-        }));
+        mruby.obj(vector)
+    });
 
-        mruby.def_class_method::<Vector, _>("uniform", mrfn!(|mruby, _slf: Value, value: f64| {
-            let value = value as f32;
-            let vector = Vector::new_unf(value);
+    def_self!("zero", |mruby, _slf: Value| {
+        mruby.obj(Vector::zero())
+    });
 
-            mruby.obj(vector)
-        }));
+    def_self!("one", |mruby, _slf: Value| {
+        mruby.obj(Vector::one())
+    });
 
-        mruby.def_class_method::<Vector, _>("zero", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Vector::zero())
-        }));
+    def_self!("back", |mruby, _slf: Value| {
+        mruby.obj(Vector::back())
+    });
 
-        mruby.def_class_method::<Vector, _>("one", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Vector::one())
-        }));
+    def_self!("down", |mruby, _slf: Value| {
+        mruby.obj(Vector::down())
+    });
 
-        mruby.def_class_method::<Vector, _>("back", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Vector::back())
-        }));
+    def_self!("forward", |mruby, _slf: Value| {
+        mruby.obj(Vector::forward())
+    });
 
-        mruby.def_class_method::<Vector, _>("down", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Vector::down())
-        }));
+    def_self!("left", |mruby, _slf: Value| {
+        mruby.obj(Vector::left())
+    });
 
-        mruby.def_class_method::<Vector, _>("forward", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Vector::forward())
-        }));
+    def_self!("right", |mruby, _slf: Value| {
+        mruby.obj(Vector::right())
+    });
 
-        mruby.def_class_method::<Vector, _>("left", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Vector::left())
-        }));
+    def_self!("up", |mruby, _slf: Value| {
+        mruby.obj(Vector::up())
+    });
 
-        mruby.def_class_method::<Vector, _>("right", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Vector::right())
-        }));
+    def!("==", |mruby, slf: Vector, other: Vector| {
+        let result = slf.x == other.x &&
+                     slf.y == other.y &&
+                     slf.z == other.z;
 
-        mruby.def_class_method::<Vector, _>("up", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Vector::up())
-        }));
+        mruby.bool(result)
+    });
 
-        mruby.def_method::<Vector, _>("==", mrfn!(|mruby, slf: Vector, other: Vector| {
-            let result = slf.x == other.x &&
-                         slf.y == other.y &&
-                         slf.z == other.z;
+    def!("to_s", |mruby, slf: Vector| {
+        let string = format!("<Vector: @x={} @y={} @z={}>", slf.x, slf.y, slf.z);
 
-            mruby.bool(result)
-        }));
+        mruby.string(&string)
+    });
 
-        mruby.def_method::<Vector, _>("to_s", mrfn!(|mruby, slf: Vector| {
-            let string = format!("<Vector: @x={} @y={} @z={}>", slf.x, slf.y, slf.z);
+    def!("+", |mruby, slf: Vector, other: Vector| {
+        mruby.obj((*slf).clone() + (*other).clone())
+    });
 
-            mruby.string(&string)
-        }));
+    def!("-", |mruby, slf: Vector, other: Vector| {
+        mruby.obj((*slf).clone() - (*other).clone())
+    });
 
-        mruby.def_method::<Vector, _>("+", mrfn!(|mruby, slf: Vector, other: Vector| {
-            mruby.obj((*slf).clone() + (*other).clone())
-        }));
+    def!("*", |mruby, slf: Vector, other: Value| {
+        match other.type_name() {
+            "Float" => {
+                let scalar = other.to_f64().unwrap();
 
-        mruby.def_method::<Vector, _>("-", mrfn!(|mruby, slf: Vector, other: Vector| {
-            mruby.obj((*slf).clone() - (*other).clone())
-        }));
-
-        mruby.def_method::<Vector, _>("*", mrfn!(|mruby, slf: Vector, other: Value| {
-            match other.type_name() {
-                "Float" => {
-                    let scalar = other.to_f64().unwrap();
-
-                    mruby.obj((*slf).clone() * (scalar as f32))
-                }
-                "Vector" => {
-                    let vector = other.to_obj::<Vector>().unwrap();
-
-                    mruby.obj((*slf).clone() * (*vector).clone())
-                }
-                _ => mruby.raise("TypeError", "expecting Float or Vector")
+                mruby.obj((*slf).clone() * (scalar as f32))
             }
-        }));
+            "Vector" => {
+                let vector = other.to_obj::<Vector>().unwrap();
 
-        mruby.def_method::<Vector, _>("-@", mrfn!(|mruby, slf: Vector| {
-            mruby.obj(-(*slf).clone())
-        }));
+                mruby.obj((*slf).clone() * (*vector).clone())
+            }
+            _ => mruby.raise("TypeError", "expecting Float or Vector")
+        }
+    });
 
-        mruby.def_method::<Vector, _>("x", mrfn!(|mruby, slf: Vector| {
-            mruby.float(slf.x as f64)
-        }));
+    def!("-@", |mruby, slf: Vector| {
+        mruby.obj(-(*slf).clone())
+    });
 
-        mruby.def_method::<Vector, _>("y", mrfn!(|mruby, slf: Vector| {
-            mruby.float(slf.y as f64)
-        }));
+    def!("x", |mruby, slf: Vector| {
+        mruby.float(slf.x as f64)
+    });
 
-        mruby.def_method::<Vector, _>("z", mrfn!(|mruby, slf: Vector| {
-            mruby.float(slf.z as f64)
-        }));
+    def!("y", |mruby, slf: Vector| {
+        mruby.float(slf.y as f64)
+    });
 
-        mruby.def_method::<Vector, _>("len", mrfn!(|mruby, slf: Vector| {
-            mruby.float(slf.len() as f64)
-        }));
+    def!("z", |mruby, slf: Vector| {
+        mruby.float(slf.z as f64)
+    });
 
-        mruby.def_method::<Vector, _>("norm", mrfn!(|mruby, slf: Vector| {
-            mruby.obj(slf.norm())
-        }));
+    def!("len", |mruby, slf: Vector| {
+        mruby.float(slf.len() as f64)
+    });
 
-        mruby.def_method::<Vector, _>("dot", mrfn!(|mruby, slf: Vector, other: Vector| {
-            mruby.float(slf.dot((*other).clone()) as f64)
-        }));
+    def!("norm", |mruby, slf: Vector| {
+        mruby.obj(slf.norm())
+    });
 
-        mruby.def_method::<Vector, _>("cross", mrfn!(|mruby, slf: Vector, other: Vector| {
-            mruby.obj(slf.cross((*other).clone()))
-        }));
+    def!("dot", |mruby, slf: Vector, other: Vector| {
+        mruby.float(slf.dot((*other).clone()) as f64)
+    });
 
-        mruby.def_method::<Vector, _>("rot", mrfn!(|mruby, slf: Vector, quternion: Quaternion| {
-            mruby.obj(slf.rot((*quternion).clone()))
-        }));
+    def!("cross", |mruby, slf: Vector, other: Vector| {
+        mruby.obj(slf.cross((*other).clone()))
+    });
 
-        mruby.def_method::<Vector, _>("rot_around", mrfn!(|mruby, slf: Vector,
-                                                           quternion: Quaternion, point: Vector| {
-            mruby.obj(slf.rot_around((*quternion).clone(), (*point).clone()))
-        }));
+    def!("rot", |mruby, slf: Vector, quternion: Quaternion| {
+        mruby.obj(slf.rot((*quternion).clone()))
+    });
 
-        mruby.def_method::<Vector, _>("angle", mrfn!(|mruby, slf: Vector, other: Vector| {
-            mruby.float(slf.angle((*other).clone()) as f64)
-        }));
+    def!("rot_around", |mruby, slf: Vector, quternion: Quaternion, point: Vector| {
+        mruby.obj(slf.rot_around((*quternion).clone(), (*point).clone()))
+    });
 
-        mruby.def_method::<Vector, _>("dist", mrfn!(|mruby, slf: Vector, other: Vector| {
-            mruby.float(slf.dist((*other).clone()) as f64)
-        }));
+    def!("angle", |mruby, slf: Vector, other: Vector| {
+        mruby.float(slf.angle((*other).clone()) as f64)
+    });
 
-        mruby.def_method::<Vector, _>("<=>", mrfn!(|mruby, slf: Vector, other: Vector| {
-            mruby.float((slf.len() - other.len()) as f64)
-        }));
+    def!("dist", |mruby, slf: Vector, other: Vector| {
+        mruby.float(slf.dist((*other).clone()) as f64)
+    });
 
-        mruby.def_method::<Vector, _>("interpolate", mrfn!(|mruby, slf: Vector, other: Vector,
-                                                            ratio: f64| {
-            mruby.obj(slf.interpolate((*other).clone(), ratio as f32))
-        }));
-    }
-}
+    def!("<=>", |mruby, slf: Vector, other: Vector| {
+        mruby.float((slf.len() - other.len()) as f64)
+    });
+
+    def!("interpolate", |mruby, slf: Vector, other: Vector, ratio: f64| {
+        mruby.obj(slf.interpolate((*other).clone(), ratio as f32))
+    });
+});
 
 #[cfg(test)]
 mod tests {

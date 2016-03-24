@@ -323,80 +323,76 @@ impl Mul<Matrix> for Matrix {
     }
 }
 
-impl MRubyFile for Matrix {
-    fn require(mruby: MRubyType) {
-        mruby.def_class::<Matrix>("Matrix");
+mrclass!(Matrix, {
+    def!("initialize", |vec: Vec| {
+        let mut array = [0.0f32; 16];
 
-        mruby.def_method::<Matrix, _>("initialize", mrfn!(|_mruby, slf: Value, vec: Vec| {
-            let mut array = [0.0f32; 16];
+        for i in 0..16 {
+            array[i] = vec[i].to_f64().unwrap() as f32;
+        }
 
-            for i in 0..16 {
-                array[i] = vec[i].to_f64().unwrap() as f32;
+        Matrix::new(array)
+    });
+
+    def_self!("identity", |mruby, _slf: Value| {
+        mruby.obj(Matrix::ident())
+    });
+
+    def!("to_a", |mruby, slf: Matrix| {
+        let vec: Vec<_> = slf.array.iter().map(|value| mruby.float(*value as f64)).collect();
+
+        mruby.array(vec)
+    });
+
+    def!("==", |mruby, slf: Matrix, other: Matrix| {
+        let result = slf.array == other.array;
+
+        mruby.bool(result)
+    });
+
+    def!("to_s", |mruby, slf: Matrix| {
+        let string = format!("<Matrix: @array={:?}>", slf.array);
+
+        mruby.string(&string)
+    });
+
+    def!("*", |mruby, slf: Matrix, other: Value| {
+        match other.type_name() {
+            "Vector" => {
+                let vector = other.to_obj::<Vector>().unwrap();
+
+                mruby.obj((*slf).clone() * (*vector).clone())
             }
+            "Matrix" => {
+                let matrix = other.to_obj::<Matrix>().unwrap();
 
-            slf.init(Matrix::new(array))
-        }));
-
-        mruby.def_class_method::<Matrix, _>("identity", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Matrix::ident())
-        }));
-
-        mruby.def_method::<Matrix, _>("to_a", mrfn!(|mruby, slf: Matrix| {
-            let vec: Vec<_> = slf.array.iter().map(|value| mruby.float(*value as f64)).collect();
-
-            mruby.array(vec)
-        }));
-
-        mruby.def_method::<Matrix, _>("==", mrfn!(|mruby, slf: Matrix, other: Matrix| {
-            let result = slf.array == other.array;
-
-            mruby.bool(result)
-        }));
-
-        mruby.def_method::<Matrix, _>("to_s", mrfn!(|mruby, slf: Matrix| {
-            let string = format!("<Matrix: @array={:?}>", slf.array);
-
-            mruby.string(&string)
-        }));
-
-        mruby.def_method::<Matrix, _>("*", mrfn!(|mruby, slf: Matrix, other: Value| {
-            match other.type_name() {
-                "Vector" => {
-                    let vector = other.to_obj::<Vector>().unwrap();
-
-                    mruby.obj((*slf).clone() * (*vector).clone())
-                }
-                "Matrix" => {
-                    let matrix = other.to_obj::<Matrix>().unwrap();
-
-                    mruby.obj((*slf).clone() * (*matrix).clone())
-                }
-                _ => mruby.raise("TypeError", "expecting Vector or Matrix")
+                mruby.obj((*slf).clone() * (*matrix).clone())
             }
-        }));
+            _ => mruby.raise("TypeError", "expecting Vector or Matrix")
+        }
+    });
 
-        mruby.def_method::<Matrix, _>("trans", mrfn!(|mruby, slf: Matrix, vector: Vector| {
-            mruby.obj(slf.trans((*vector).clone()))
-        }));
+    def!("trans", |mruby, slf: Matrix, vector: Vector| {
+        mruby.obj(slf.trans((*vector).clone()))
+    });
 
-        mruby.def_method::<Matrix, _>("scale", mrfn!(|mruby, slf: Matrix, vector: Vector| {
-            mruby.obj(slf.scale((*vector).clone()))
-        }));
+    def!("scale", |mruby, slf: Matrix, vector: Vector| {
+        mruby.obj(slf.scale((*vector).clone()))
+    });
 
-        mruby.def_method::<Matrix, _>("rot", mrfn!(|mruby, slf: Matrix, quaternion: Quaternion| {
-            mruby.obj(slf.rot((*quaternion).clone()))
-        }));
+    def!("rot", |mruby, slf: Matrix, quaternion: Quaternion| {
+        mruby.obj(slf.rot((*quaternion).clone()))
+    });
 
-        mruby.def_method::<Matrix, _>("rot_around", mrfn!(|mruby, slf: Matrix, quaternion: Quaternion,
-                                                    point: Vector| {
-            mruby.obj(slf.rot_around((*quaternion).clone(), (*point).clone()))
-        }));
+    def!("rot_around", |mruby, slf: Matrix, quaternion: Quaternion,
+                                                point: Vector| {
+        mruby.obj(slf.rot_around((*quaternion).clone(), (*point).clone()))
+    });
 
-        mruby.def_method::<Matrix, _>("inv", mrfn!(|mruby, slf: Matrix| {
-            mruby.obj(slf.inv())
-        }));
-    }
-}
+    def!("inv", |mruby, slf: Matrix| {
+        mruby.obj(slf.inv())
+    });
+});
 
 #[cfg(test)]
 mod tests {
@@ -410,6 +406,12 @@ mod tests {
       context 'when identity' do
         subject { Matrix.identity }
         let(:unit) { Vector.uniform 1.0 }
+
+        it 'converts to String on #to_s' do
+          expect(subject.to_s).to eql(
+            '<Matrix: @array=[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]>'
+          )
+        end
 
         it 'multiplies matrix on #*' do
           expect(subject * Matrix.new([2.0] * 16)).to eql Matrix.new([2.0] * 16)
@@ -432,7 +434,8 @@ mod tests {
         end
 
         it 'adds rotation around a point to a matrix on #rot_around' do
-          rotated = subject.rot_around(Quaternion.rotation(Vector.up, Math::PI), Vector.left) * unit
+          rotated = subject.rot_around(Quaternion.rotation(Vector.up, Math::PI), Vector.left) *
+                    unit
 
           expect(rotated.x).to be_within(0.000001).of  1.0
           expect(rotated.y).to be_within(0.000001).of  1.0

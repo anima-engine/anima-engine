@@ -214,9 +214,9 @@ impl Bezier {
     ///
     /// const EPSILON: f32 = 0.001;
     ///
-    /// assert!((b.length(20) - consts::PI / 2.0).abs() < EPSILON);
+    /// assert!((b.len(20) - consts::PI / 2.0).abs() < EPSILON);
     /// ```
-    pub fn length(&self, steps: i32) -> f32 {
+    pub fn len(&self, steps: i32) -> f32 {
         let (length, _) = (1..steps + 1).fold((0.0, self.v1), |(l, v), i| {
             let n = self.interpolate((i as f32) / (steps as f32));
 
@@ -226,6 +226,45 @@ impl Bezier {
         length
     }
 }
+
+use mrusty::*;
+
+mrclass!(Bezier, {
+    def!("initialize", |mruby; args| {
+        match args.len() {
+            3 => {
+                Bezier::new_sqr(
+                    (*args[0].to_obj::<Vector>().unwrap()).clone(),
+                    (*args[1].to_obj::<Vector>().unwrap()).clone(),
+                    (*args[2].to_obj::<Vector>().unwrap()).clone()
+                )
+            }
+            4 => {
+                Bezier::new_cub(
+                    (*args[0].to_obj::<Vector>().unwrap()).clone(),
+                    (*args[1].to_obj::<Vector>().unwrap()).clone(),
+                    (*args[2].to_obj::<Vector>().unwrap()).clone(),
+                    (*args[3].to_obj::<Vector>().unwrap()).clone()
+                )
+            }
+            _ => {
+                return mruby.raise("ArgumentError", "wrong number of arguments")
+            }
+        }
+    });
+
+    def!("interpolate", |mruby, slf: Bezier, ratio: f64| {
+        mruby.obj(slf.interpolate(ratio as f32))
+    });
+
+    def!("length", |mruby, slf: Bezier; args| {
+        match args.len() {
+            0 => mruby.float(slf.len(20) as f64),
+            1 => mruby.float(slf.len(args[0].to_i32().unwrap()) as f64),
+            _ => mruby.raise("ArgumentError", "wrong number of arguments")
+        }
+    });
+});
 
 /// A `struct` useful for creating a path of Bézier curves.
 #[derive(Clone, Debug, PartialEq)]
@@ -264,7 +303,7 @@ impl BezierPath {
     pub fn new(curves: Vec<Bezier>) -> BezierPath {
         const STEPS: i32 = 20;
 
-        let lengths: Vec<f32> = curves.iter().map(|c| c.length(STEPS)).collect();
+        let lengths: Vec<f32> = curves.iter().map(|c| c.len(STEPS)).collect();
         let sum = lengths.iter().fold(0.0, |s, l| s + l);
 
         BezierPath {
@@ -326,4 +365,30 @@ impl BezierPath {
 
         curve.interpolate(ratio)
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use mrusty::*;
+
+    use super::Bezier;
+    use super::super::Vector;
+
+    describe!(Bezier, (Vector), "
+      context 'when square arc' do
+        subject { Bezier.new Vector.forward, Vector.uniform(1.0), Vector.left }
+
+        it 'interpolates Vectors on #interpolate' do
+          expect(subject.interpolate 0.5).to eql Vector.new(0.75, 0.5, 0.75)
+        end
+
+        it 'returns approximated length on #length' do
+          expect(subject.length).to be_within(0.000001).of 1.950975
+        end
+
+        it 'returns approximated length on #length with custom number of steps' do
+          expect(subject.length 10).to be_within(0.01).of 1.950975
+        end
+      end
+    ");
 }

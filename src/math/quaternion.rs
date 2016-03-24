@@ -243,94 +243,83 @@ impl Interpolate for Quaternion {
     }
 }
 
-impl MRubyFile for Quaternion {
-    fn require(mruby: MRubyType) {
-        mruby.def_class::<Quaternion>("Quaternion");
+mrclass!(Quaternion, {
+    def!("initialize", |x: f64, y: f64, z: f64, w: f64| {
+        Quaternion::new(x as f32, y as f32, z as f32, w as f32)
+    });
 
-        mruby.def_method::<Quaternion, _>("initialize", mrfn!(|_mruby, slf: Value,
-                                                               x: f64, y: f64, z: f64, w: f64| {
-            let quaternion = Quaternion::new(x as f32, y as f32, z as f32, w as f32);
+    def_self!("rotation", |mruby, _slf: Value, direction: Vector, angle: f64| {
+        let quaternion = Quaternion::new_rot((*direction).clone(), angle as f32);
 
-            slf.init(quaternion)
-        }));
+        mruby.obj(quaternion)
+    });
 
-        mruby.def_class_method::<Quaternion, _>("rotation", mrfn!(|mruby, _slf: Value,
-                                                               direction: Vector, angle: f64| {
-            let quaternion = Quaternion::new_rot((*direction).clone(), angle as f32);
+    def_self!("sph_rotation", |mruby, _slf: Value, start: Vector, finish: Vector| {
+        let quaternion = Quaternion::new_sph_rot((*start).clone(), (*finish).clone());
 
-            mruby.obj(quaternion)
-        }));
+        mruby.obj(quaternion)
+    });
 
-        mruby.def_class_method::<Quaternion, _>("sph_rotation", mrfn!(|mruby, _slf: Value,
-                                                                       start: Vector,
-                                                                       finish: Vector| {
-            let quaternion = Quaternion::new_sph_rot((*start).clone(), (*finish).clone());
+    def_self!("identity", |mruby, _slf: Value| {
+        mruby.obj(Quaternion::ident())
+    });
 
-            mruby.obj(quaternion)
-        }));
+    def!("x", |mruby, slf: Quaternion| {
+        mruby.float(slf.x as f64)
+    });
 
-        mruby.def_class_method::<Quaternion, _>("identity", mrfn!(|mruby, _slf: Value| {
-            mruby.obj(Quaternion::ident())
-        }));
+    def!("y", |mruby, slf: Quaternion| {
+        mruby.float(slf.y as f64)
+    });
 
-        mruby.def_method::<Quaternion, _>("x", mrfn!(|mruby, slf: Quaternion| {
-            mruby.float(slf.x as f64)
-        }));
+    def!("z", |mruby, slf: Quaternion| {
+        mruby.float(slf.z as f64)
+    });
 
-        mruby.def_method::<Quaternion, _>("y", mrfn!(|mruby, slf: Quaternion| {
-            mruby.float(slf.y as f64)
-        }));
+    def!("w", |mruby, slf: Quaternion| {
+        mruby.float(slf.w as f64)
+    });
 
-        mruby.def_method::<Quaternion, _>("z", mrfn!(|mruby, slf: Quaternion| {
-            mruby.float(slf.z as f64)
-        }));
+    def!("==", |mruby, slf: Quaternion, other: Quaternion| {
+        let result = slf.x == other.x &&
+                     slf.y == other.y &&
+                     slf.z == other.z &&
+                     slf.w == other.w;
 
-        mruby.def_method::<Quaternion, _>("w", mrfn!(|mruby, slf: Quaternion| {
-            mruby.float(slf.w as f64)
-        }));
+        mruby.bool(result)
+    });
 
-        mruby.def_method::<Quaternion, _>("==", mrfn!(|mruby, slf: Quaternion, other: Quaternion| {
-            let result = slf.x == other.x &&
-                         slf.y == other.y &&
-                         slf.z == other.z &&
-                         slf.w == other.w;
+    def!("to_s", |mruby, slf: Quaternion| {
+        let string = format!("<Quaternion: @x={} @y={} @z={} @w={}>",
+                             slf.x, slf.y, slf.z, slf.w);
 
-            mruby.bool(result)
-        }));
+        mruby.string(&string)
+    });
 
-        mruby.def_method::<Quaternion, _>("to_s", mrfn!(|mruby, slf: Quaternion| {
-            let string = format!("<Quaternion: @x={} @y={} @z={} @w={}>",
-                                 slf.x, slf.y, slf.z, slf.w);
+    def!("*", |mruby, slf: Quaternion, other: Quaternion| {
+        mruby.obj((*slf).clone() * (*other).clone())
+    });
 
-            mruby.string(&string)
-        }));
+    def!("conj", |mruby, slf: Quaternion| {
+        mruby.obj(slf.conj())
+    });
 
-        mruby.def_method::<Quaternion, _>("*", mrfn!(|mruby, slf: Quaternion, other: Quaternion| {
-            mruby.obj((*slf).clone() * (*other).clone())
-        }));
+    def!("inv", |mruby, slf: Quaternion| {
+        mruby.obj(slf.inv())
+    });
 
-        mruby.def_method::<Quaternion, _>("conj", mrfn!(|mruby, slf: Quaternion| {
-            mruby.obj(slf.conj())
-        }));
+    def!("dot", |mruby, slf: Quaternion, other: Quaternion| {
+        mruby.float(slf.dot((*other).clone()) as f64)
+    });
 
-        mruby.def_method::<Quaternion, _>("inv", mrfn!(|mruby, slf: Quaternion| {
-            mruby.obj(slf.inv())
-        }));
+    def!("angle", |mruby, slf: Quaternion, other: Quaternion| {
+        mruby.float(slf.angle((*other).clone()) as f64)
+    });
 
-        mruby.def_method::<Quaternion, _>("dot", mrfn!(|mruby, slf: Quaternion, other: Quaternion| {
-            mruby.float(slf.dot((*other).clone()) as f64)
-        }));
-
-        mruby.def_method::<Quaternion, _>("angle", mrfn!(|mruby, slf: Quaternion, other: Quaternion| {
-            mruby.float(slf.angle((*other).clone()) as f64)
-        }));
-
-        mruby.def_method::<Quaternion, _>("interpolate", mrfn!(|mruby, slf: Quaternion,
-                                                                other: Quaternion, ratio: f64| {
-            mruby.obj(slf.interpolate((*other).clone(), ratio as f32))
-        }));
-    }
-}
+    def!("interpolate", |mruby, slf: Quaternion, other: Quaternion, ratio: f64| {
+        mruby.obj(slf.interpolate((*other).clone(), ratio as f32))
+    });
+});
 
 #[cfg(test)]
 mod tests {
@@ -392,6 +381,10 @@ mod tests {
 
         it 'returns w on #w' do
           expect(subject.w).to eql 1.0
+        end
+
+        it 'converts to String on #to_s' do
+          expect(subject.to_s).to eql '<Quaternion: @x=1 @y=1 @z=1 @w=1>'
         end
 
         it 'returns inverse on #inv' do
