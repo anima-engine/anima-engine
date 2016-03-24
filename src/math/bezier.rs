@@ -365,6 +365,35 @@ impl BezierPath {
 
         curve.interpolate(ratio)
     }
+
+    /// Computes the approximated length of a Bézier path by summing the distances between `steps`
+    /// uniformly distrubuted, consecutive points per curve.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use anima_engine::math::BezierPath;
+    /// # use anima_engine::math::Bezier;
+    /// # use anima_engine::math::Vector;
+    /// let b1 = Bezier::new_sqr(
+    ///     Vector::new(0.0, 0.0, 0.0),
+    ///     Vector::new(1.0, 1.0, 0.0),
+    ///     Vector::new(2.0, 2.0, 0.0)
+    /// );
+    /// let b2 = Bezier::new_sqr(
+    ///     Vector::new(2.0, 2.0, 0.0),
+    ///     Vector::new(6.0, 6.0, 0.0),
+    ///     Vector::new(10.0, 10.0, 0.0)
+    /// );
+    /// let p = BezierPath::new(vec![b1, b2]);
+    ///
+    /// const EPSILON: f32 = 0.001;
+    ///
+    /// assert!((p.len(20) - 14.142137).abs() < EPSILON);
+    /// ```
+    pub fn len(&self, steps: i32) -> f32 {
+        self.curves.iter().map(|curve| curve.len(steps)).fold(0.0, |s, l| s + l)
+    }
 }
 
 #[cfg(test)]
