@@ -137,7 +137,7 @@ use mrusty::*;
 
 mrclass!(Interpolator, {
     def!("initialize", |mruby, start: f64, duration: f64, behavior: Value| {
-        let behavior = match behavior.call_unchecked("to_s", vec![]).to_str().unwrap() {
+        let behavior = match behavior.to_str().unwrap() {
             "linear" => Behavior::Linear,
             "acc"    => Behavior::Acc,
             "dec"    => Behavior::Dec,
@@ -167,7 +167,7 @@ mrclass!(Interpolator, {
             Behavior::AccDec => "accdec"
         };
 
-        mruby.string(behavior).call_unchecked("to_sym", vec![])
+        mruby.symbol(behavior)
     });
 
     def!("==", |mruby, slf: Interpolator, other: Interpolator| {
