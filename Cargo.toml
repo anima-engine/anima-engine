@@ -7,4 +7,5 @@ keywords = ["anima", "anima-engine", "game", "engine"]
 license = "LGPL-3.0"
 
 [dependencies]
-mrusty = "0.3.1"
+mrusty = "0.3.2"
+time = "0.1.35"

@@ -14,12 +14,22 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-//! The quirky game engine.
+use mrusty::*;
 
-#[macro_use]
-extern crate mrusty;
-extern crate time;
+use super::math::Bezier;
+use super::math::Interpolator;
+use super::math::Matrix;
+use super::math::Quaternion;
+use super::math::Vector;
 
-pub mod game;
-pub mod math;
-pub mod scripting;
+pub fn get_mruby() -> MrubyType {
+    let mruby = Mruby::new();
+
+    mruby.def_file::<Bezier>("math");
+    mruby.def_file::<Interpolator>("math");
+    mruby.def_file::<Matrix>("math");
+    mruby.def_file::<Quaternion>("math");
+    mruby.def_file::<Vector>("math");
+
+    mruby
+}

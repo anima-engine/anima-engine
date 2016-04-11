@@ -14,12 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-//! The quirky game engine.
+mod game;
+mod game_loop;
+mod mruby_game;
 
-#[macro_use]
-extern crate mrusty;
-extern crate time;
-
-pub mod game;
-pub mod math;
-pub mod scripting;
+pub use self::game::Game;
+pub use self::game_loop::GameLoop;
+pub use self::mruby_game::MrubyGame;

@@ -14,12 +14,28 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-//! The quirky game engine.
+use super::game::Game;
 
-#[macro_use]
-extern crate mrusty;
-extern crate time;
+use time;
 
-pub mod game;
-pub mod math;
-pub mod scripting;
+pub struct GameLoop<T: Game> {
+    pub game: T
+}
+
+impl<T: Game> GameLoop<T> {
+    pub fn new(game: T) -> GameLoop<T> {
+        GameLoop { game: game }
+    }
+
+    pub fn run(&self) {
+        let mut last = time::get_time();
+
+        loop {
+            let now = time::get_time();
+
+            self.game.update(now - last);
+
+            last = now;
+        }
+    }
+}
