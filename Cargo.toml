@@ -3,6 +3,8 @@ name = "anima-engine"
 version = "0.0.1"
 description = "The quirky game engine."
 authors = ["Dragoș Tiselice <dragostiselice@gmail.com>", "Robert Krody <krody.robi@gmail.com>"]
+repository = "https://github.com/anima-engine/anima-engine"
+documentation = "http://anima-engine.github.io/anima-engine/"
 keywords = ["anima", "anima-engine", "game", "engine"]
 license = "LGPL-3.0"
 
