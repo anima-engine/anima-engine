@@ -9,7 +9,7 @@
 | ------------------------------ | :---------: |
 | linear math                    | implemented |
 | cross-device controls          | in-progress |
-| mruby scripting                | in-progress |
+| mruby scripting                | implemented |
 | live console                   | in-progress |
 | flexible graphics pipeline     | waiting     |
 | Vulkan support                 | waiting     |

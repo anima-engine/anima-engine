@@ -1,6 +1,6 @@
 [package]
 name = "anima-engine"
-version = "0.1.0"
+version = "0.0.1"
 description = "The quirky game engine."
 authors = ["Dragoș Tiselice <dragostiselice@gmail.com>", "Robert Krody <krody.robi@gmail.com>"]
 keywords = ["anima", "anima-engine", "game", "engine"]
