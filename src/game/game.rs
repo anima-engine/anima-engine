@@ -16,7 +16,8 @@
 
 use time::Duration;
 
-/// A `trait` runnable within a `GameLoop`. `dt` is the `Duration` since last frame.
+/// A `trait` runnable within a `GameLoop`. `dt` is the `Duration` since last frame. `update`
+/// should return the boolean value of whether the game should continue.
 ///
 /// # Examples
 ///
@@ -27,13 +28,14 @@ use time::Duration;
 /// pub struct MyGame;
 ///
 /// impl Game for MyGame {
-///     fn update(&self, dt: Duration) {
+///     fn update(&self, dt: Duration) -> bool {
 ///         // Update game state.
+///         // Return `false` when game needs to stop.
 ///     }
 /// }
 ///
 /// GameLoop::new(MyGame);
 /// ```
 pub trait Game {
-    fn update(&self, dt: Duration);
+    fn update(&self, dt: Duration) -> bool;
 }

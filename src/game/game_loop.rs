@@ -28,6 +28,7 @@ use time;
 /// impl Game for MyGame {
 ///     fn update(&self, dt: Duration) {
 ///         // Update game state.
+///         // Return `false` when game needs to stop.
 ///     }
 /// }
 ///
@@ -51,6 +52,7 @@ impl<T: Game> GameLoop<T> {
     /// impl Game for MyGame {
     ///     fn update(&self, dt: Duration) {
     ///         // Update game state.
+    ///         // Return `false` when game needs to stop.
     ///     }
     /// }
     ///
@@ -71,6 +73,7 @@ impl<T: Game> GameLoop<T> {
     /// impl Game for MyGame {
     ///     fn update(&self, dt: Duration) {
     ///         // Update game state.
+    ///         // Return `false` when game needs to stop.
     ///     }
     /// }
     ///
@@ -82,7 +85,9 @@ impl<T: Game> GameLoop<T> {
         loop {
             let now = time::get_time();
 
-            self.game.update(now - last);
+            if !self.game.update(now - last) {
+                break;
+            }
 
             last = now;
         }

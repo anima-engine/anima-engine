@@ -72,7 +72,7 @@ impl MrubyGame {
 }
 
 impl Game for MrubyGame {
-    fn update(&self, dt: Duration) {
+    fn update(&self, dt: Duration) -> bool {
         let seconds = dt.num_seconds() as f64;
         let nanoseconds = match dt.num_nanoseconds() {
             Some(nanoseconds) => nanoseconds as f64 / 1.0e+9,
@@ -81,6 +81,6 @@ impl Game for MrubyGame {
 
         let dt = self.mruby.float(seconds + nanoseconds);
 
-        self.game.call("update", vec![dt]).unwrap();
+        self.game.call("update", vec![dt]).unwrap().to_bool().unwrap()
     }
 }
