@@ -23,12 +23,37 @@ use mrusty::*;
 use super::game::Game;
 use super::super::scripting;
 
+
+/// A `struct` used to run games from mruby directly.
+///
+/// Make sure you point to an mruby file with a `Game` `Class` defined which implements a method
+/// `update(dt)`, where `dt` is a `Float` representing the time since the last frame.
+///
+/// # Examples
+///
+/// ```no-run
+/// let game = MrubyGame::new(Path::new("game.rb"));
+///
+/// GameLoop::new(game).run();
+/// ```
 pub struct MrubyGame {
     pub mruby: MrubyType,
     pub game: Value
 }
 
 impl MrubyGame {
+    /// Creates a new `MrubyGame` from an mruby script.
+    ///
+    /// Make sure you point to an mruby file with a `Game` `Class` defined which implements a
+    /// method `update(dt)`, where `dt` is a `Float` representing the time since the last frame.
+    ///
+    /// # Examples
+    ///
+    /// ```no-run
+    /// let game = MrubyGame::new(Path::new("game.rb"));
+    ///
+    /// GameLoop::new(game).run();
+    /// ```
     pub fn new(script: &Path) -> MrubyGame {
         let mruby = scripting::get_mruby();
 

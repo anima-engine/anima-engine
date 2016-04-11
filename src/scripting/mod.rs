@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+//! A `mod` containing scripting-related helpers.
+
 use mrusty::*;
 
 use super::math::Bezier;
@@ -22,6 +24,26 @@ use super::math::Matrix;
 use super::math::Quaternion;
 use super::math::Vector;
 
+/// A `fn` that returns a new mruby state with `require`able Anima API.
+///
+/// API is structured in virtual mruby files thus:
+///
+/// * `math`
+///   * `Bezier`
+///   * `Interpolator`
+///   * `Matrix`
+///   * `Quaternion`
+///   * `Vector`
+///
+/// # Examples
+///
+/// ```
+/// # use anima_engine::mrusty::*;
+/// # use anima_engine::scripting;
+/// let mruby = scripting::get_mruby();
+///
+/// mruby.run("require 'math'; Vector.uniform 0.1").unwrap();
+/// ```
 pub fn get_mruby() -> MrubyType {
     let mruby = Mruby::new();
 

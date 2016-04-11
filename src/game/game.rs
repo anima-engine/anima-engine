@@ -16,6 +16,24 @@
 
 use time::Duration;
 
+/// A `trait` runnable within a `GameLoop`. `dt` is the `Duration` since last frame.
+///
+/// # Examples
+///
+/// ```
+/// # use anima_engine::time::Duration;
+/// # use anima_engine::game::Game;
+/// # use anima_engine::game::GameLoop;
+/// pub struct MyGame;
+///
+/// impl Game for MyGame {
+///     fn update(&self, dt: Duration) {
+///         // Update game state.
+///     }
+/// }
+///
+/// GameLoop::new(MyGame);
+/// ```
 pub trait Game {
     fn update(&self, dt: Duration);
 }

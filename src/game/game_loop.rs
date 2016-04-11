@@ -18,15 +18,64 @@ use super::game::Game;
 
 use time;
 
+/// A `struct` that helps you create a very simple game loop.
+///
+/// # Examples
+///
+/// ```no-run
+/// pub struct MyGame;
+///
+/// impl Game for MyGame {
+///     fn update(&self, dt: Duration) {
+///         // Update game state.
+///     }
+/// }
+///
+/// GameLoop::new(MyGame).run();
+/// ```
 pub struct GameLoop<T: Game> {
     pub game: T
 }
 
 impl<T: Game> GameLoop<T> {
+    /// Creates a `GameLoop`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use anima_engine::time::Duration;
+    /// # use anima_engine::game::Game;
+    /// # use anima_engine::game::GameLoop;
+    /// pub struct MyGame;
+    ///
+    /// impl Game for MyGame {
+    ///     fn update(&self, dt: Duration) {
+    ///         // Update game state.
+    ///     }
+    /// }
+    ///
+    /// GameLoop::new(MyGame);
+    /// ```
     pub fn new(game: T) -> GameLoop<T> {
         GameLoop { game: game }
     }
 
+    /// Runs `GameLoop`'s `Game` in a loop while feeding the time between frames to the `Game`'s
+    /// `update`.
+    ///
+    /// # Examples
+    ///
+    /// ```no-run
+    /// pub struct MyGame;
+    ///
+    /// impl Game for MyGame {
+    ///     fn update(&self, dt: Duration) {
+    ///         // Update game state.
+    ///     }
+    /// }
+    ///
+    /// GameLoop::new(MyGame).run();
+    /// ```
     pub fn run(&self) {
         let mut last = time::get_time();
 
