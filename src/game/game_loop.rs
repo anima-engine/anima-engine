@@ -22,13 +22,17 @@ use time;
 ///
 /// # Examples
 ///
-/// ```no-run
+/// ```
+/// # use anima_engine::time::Duration;
+/// # use anima_engine::game::Game;
+/// # use anima_engine::game::GameLoop;
 /// pub struct MyGame;
 ///
 /// impl Game for MyGame {
-///     fn update(&self, dt: Duration) {
+///     fn update(&self, dt: Duration) -> bool {
 ///         // Update game state.
 ///         // Return `false` when game needs to stop.
+///         false
 ///     }
 /// }
 ///
@@ -50,9 +54,10 @@ impl<T: Game> GameLoop<T> {
     /// pub struct MyGame;
     ///
     /// impl Game for MyGame {
-    ///     fn update(&self, dt: Duration) {
+    ///     fn update(&self, dt: Duration) -> bool {
     ///         // Update game state.
     ///         // Return `false` when game needs to stop.
+    ///         false
     ///     }
     /// }
     ///
@@ -67,13 +72,17 @@ impl<T: Game> GameLoop<T> {
     ///
     /// # Examples
     ///
-    /// ```no-run
+    /// ```
+    /// # use anima_engine::time::Duration;
+    /// # use anima_engine::game::Game;
+    /// # use anima_engine::game::GameLoop;
     /// pub struct MyGame;
     ///
     /// impl Game for MyGame {
-    ///     fn update(&self, dt: Duration) {
+    ///     fn update(&self, dt: Duration) -> bool {
     ///         // Update game state.
     ///         // Return `false` when game needs to stop.
+    ///         false
     ///     }
     /// }
     ///

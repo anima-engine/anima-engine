@@ -31,6 +31,7 @@ use time::Duration;
 ///     fn update(&self, dt: Duration) -> bool {
 ///         // Update game state.
 ///         // Return `false` when game needs to stop.
+///         false
 ///     }
 /// }
 ///
