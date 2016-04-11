@@ -59,10 +59,8 @@ impl MrubyGame {
 
         mruby.execute(script).unwrap();
 
-        let game = match mruby.run("Game.new") {
-            Ok(game) => game,
-            Err(_)   => panic!("Game class must be defined in mruby")
-        };
+        let game = mruby.run("Game.new")
+                        .unwrap_or_else(|_| { panic!("Game class must be defined in mruby") });
 
         MrubyGame {
             mruby: mruby,
