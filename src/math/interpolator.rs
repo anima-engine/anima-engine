@@ -126,7 +126,7 @@ impl Interpolator {
 
 use mrusty::*;
 
-mrclass!(Interpolator, {
+mrusty_class!(Interpolator, {
     def!("initialize", |mruby, start: f64, duration: f64, behavior: Value| {
         let behavior = match behavior.to_str().unwrap() {
             "linear" => Behavior::Linear,

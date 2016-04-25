@@ -220,7 +220,7 @@ impl Bezier {
 
 use mrusty::*;
 
-mrclass!(Bezier, {
+mrusty_class!(Bezier, {
     def!("initialize", |mruby; args| {
         match args.len() {
             3 => {
@@ -387,16 +387,16 @@ impl BezierPath {
     }
 }
 
-mrclass!(BezierPath, {
+mrusty_class!(BezierPath, {
     def!("initialize", |mruby, curves: Vec| {
         let mut beziers = Vec::with_capacity(curves.len());
 
         for curve in curves {
-            let curve = match curve.type_name() {
+            let curve = match curve.class().to_str() {
                 "Bezier" => (*curve.to_obj::<Bezier>().unwrap()).clone(),
                 "Array"  => {
                     fn to_vector(mruby: MrubyType, value: &Value) -> Result<Vector, Value> {
-                        match value.type_name() {
+                        match value.class().to_str() {
                             "Vector" => Ok((*value.to_obj::<Vector>().unwrap()).clone()),
                             "Array"  => {
                                 let array = value.to_vec().unwrap();

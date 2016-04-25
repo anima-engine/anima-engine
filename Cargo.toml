@@ -10,8 +10,8 @@ keywords = ["anima", "anima-engine", "game", "engine"]
 license = "MPL-2.0"
 
 [dependencies]
-mrusty = "0.3.2"
+mrusty = "0.4.3"
 time = "0.1.35"
 
 [dev-dependencies]
-mrusty = { version = "0.3.2", features = ["gnu-readline"] }
+mrusty = { version = "0.4.3", features = ["gnu-readline"] }

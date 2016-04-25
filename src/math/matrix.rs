@@ -314,7 +314,7 @@ impl Mul<Matrix> for Matrix {
     }
 }
 
-mrclass!(Matrix, {
+mrusty_class!(Matrix, {
     def!("initialize", |vec: Vec| {
         let mut array = [0.0f32; 16];
 
@@ -348,7 +348,7 @@ mrclass!(Matrix, {
     });
 
     def!("*", |mruby, slf: Matrix, other: Value| {
-        match other.type_name() {
+        match other.class().to_str() {
             "Vector" => {
                 let vector = other.to_obj::<Vector>().unwrap();
 
