@@ -5,14 +5,13 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-//! The quirky game engine.
+//! A `mod` useful for controling input.
 
-pub extern crate glium;
-#[macro_use]
-pub extern crate mrusty;
-pub extern crate time;
+mod input_event;
+mod intermediate_event;
+mod intermediate;
 
-pub mod game;
-pub mod input;
-pub mod math;
-pub mod scripting;
+pub use self::input_event::InputEvent;
+pub use self::intermediate_event::IntermediateEvent;
+pub use self::intermediate::Button;
+pub use self::intermediate::Intermediate;
