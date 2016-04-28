@@ -11,7 +11,10 @@ mod input_event;
 mod intermediate_event;
 mod intermediate;
 
+pub use glium::glutin::{Event, MouseButton};
+
 pub use self::input_event::InputEvent;
 pub use self::intermediate_event::IntermediateEvent;
 pub use self::intermediate::Button;
+pub use self::intermediate::Cursor;
 pub use self::intermediate::Intermediate;

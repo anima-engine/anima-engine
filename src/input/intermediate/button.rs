@@ -5,7 +5,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-use glium::glutin::MouseButton;
+use glium::glutin::{Event, MouseButton, TouchPhase};
 
 use super::Intermediate;
 use super::super::InputEvent;
@@ -70,6 +70,68 @@ impl<'a> Intermediate for &'a mut Button {
                         Some(InputEvent::Intermediate(IntermediateEvent::ButtonCanceled(self.id)))
                     }
                 },
+                InputEvent::Raw(Event::Touch(touch)) => {
+                    match touch.phase {
+                        TouchPhase::Started => {
+                            if self.pressed {
+                                Some(InputEvent::Intermediate(
+                                    IntermediateEvent::ButtonPressed(self.id))
+                                )
+                            } else {
+                                let (x, y) = touch.location;
+                                let (x, y) = (x as i32, y as i32);
+
+                                if self.inside(x, y) {
+                                    self.pressed = true;
+
+                                    Some(InputEvent::Intermediate(
+                                        IntermediateEvent::ButtonPressed(self.id))
+                                    )
+                                } else {
+                                    Some(InputEvent::Raw(Event::Touch(touch)))
+                                }
+                            }
+                        },
+                        TouchPhase::Moved => {
+                            if self.pressed {
+                                Some(InputEvent::Intermediate(
+                                    IntermediateEvent::ButtonPressed(self.id))
+                                )
+                            } else {
+                                Some(InputEvent::Raw(Event::Touch(touch)))
+                            }
+                        },
+                        TouchPhase::Ended => {
+                            if self.pressed {
+                                self.pressed = false;
+
+                                let (x, y) = touch.location;
+                                let (x, y) = (x as i32, y as i32);
+
+                                if self.inside(x, y) {
+                                    Some(InputEvent::Intermediate(
+                                        IntermediateEvent::ButtonReleased(self.id))
+                                    )
+                                } else {
+                                    Some(InputEvent::Intermediate(
+                                        IntermediateEvent::ButtonCanceled(self.id))
+                                    )
+                                }
+                            } else {
+                                Some(InputEvent::Raw(Event::Touch(touch)))
+                            }
+                        },
+                        TouchPhase::Cancelled => {
+                            if self.pressed {
+                                Some(InputEvent::Intermediate(
+                                    IntermediateEvent::ButtonCanceled(self.id))
+                                )
+                            } else {
+                                Some(InputEvent::Raw(Event::Touch(touch)))
+                            }
+                        }
+                    }
+                },
                 event => Some(event)
             }
         }).collect()
@@ -78,7 +140,7 @@ impl<'a> Intermediate for &'a mut Button {
 
 #[cfg(test)]
 mod tests {
-    use glium::glutin::MouseButton;
+    use glium::glutin::{Event, MouseButton, Touch, TouchPhase};
 
     use super::Button;
     use super::super::Intermediate;
@@ -152,6 +214,103 @@ mod tests {
         let events = vec![
             InputEvent::Intermediate(
                 IntermediateEvent::CursorReleased(10, 50, MouseButton::Left)
+            )
+        ];
+
+        let events = button.process(events);
+
+        match events[0] {
+            InputEvent::Intermediate(IntermediateEvent::ButtonCanceled(3)) => assert!(true),
+            _ => assert!(false)
+        };
+    }
+
+    #[test]
+    fn touch_outside() {
+        let events = vec![
+            InputEvent::Raw(
+                Event::Touch(Touch {
+                    phase: TouchPhase::Started,
+                    location: (10.0, 50.0),
+                    id: 0
+                })
+            )
+        ];
+        let mut button = Button::new(3, 40, 40, 20, 20);
+
+        let events = button.process(events);
+
+        match events[0] {
+            InputEvent::Raw(Event::Touch(_)) => assert!(true),
+            _ => assert!(false)
+        };
+    }
+
+    #[test]
+    fn touch_inside() {
+        let events = vec![
+            InputEvent::Raw(
+                Event::Touch(Touch {
+                    phase: TouchPhase::Started,
+                    location: (50.0, 50.0),
+                    id: 0
+                })
+            )
+        ];
+        let mut button = Button::new(3, 40, 40, 20, 20);
+
+        let events = button.process(events);
+
+        match events[0] {
+            InputEvent::Intermediate(IntermediateEvent::ButtonPressed(3)) => assert!(true),
+            _ => assert!(false)
+        };
+
+        let events = vec![
+            InputEvent::Raw(
+                Event::Touch(Touch {
+                    phase: TouchPhase::Ended,
+                    location: (50.0, 50.0),
+                    id: 0
+                })
+            )
+        ];
+
+        let events = button.process(events);
+
+        match events[0] {
+            InputEvent::Intermediate(IntermediateEvent::ButtonReleased(3)) => assert!(true),
+            _ => assert!(false)
+        };
+    }
+
+    #[test]
+    fn touch_canceled() {
+        let events = vec![
+            InputEvent::Raw(
+                Event::Touch(Touch {
+                    phase: TouchPhase::Started,
+                    location: (50.0, 50.0),
+                    id: 0
+                })
+            )
+        ];
+        let mut button = Button::new(3, 40, 40, 20, 20);
+
+        let events = button.process(events);
+
+        match events[0] {
+            InputEvent::Intermediate(IntermediateEvent::ButtonPressed(3)) => assert!(true),
+            _ => assert!(false)
+        };
+
+        let events = vec![
+            InputEvent::Raw(
+                Event::Touch(Touch {
+                    phase: TouchPhase::Ended,
+                    location: (10.0, 50.0),
+                    id: 0
+                })
             )
         ];
 
