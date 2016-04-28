@@ -7,3 +7,8 @@
 
 //! A `mod` containing intermediate `InputEvent` generators that work on specific areas of the
 //! screen.
+
+mod selectable_area;
+
+pub use self::selectable_area::SelectableArea;
+pub use self::selectable_area::SpecialSelect;

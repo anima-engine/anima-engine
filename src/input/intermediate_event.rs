@@ -15,5 +15,11 @@ pub enum IntermediateEvent {
     ButtonCanceled(u32),
     ButtonReleased(u32),
     CursorPressed(i32, i32, MouseButton),
-    CursorReleased(i32, i32, MouseButton)
+    CursorReleased(i32, i32, MouseButton),
+    SelectablePressed(u32, i32, i32),
+    SelectableDragged(u32, i32, i32),
+    SelectableReleased(u32, i32, i32),
+    SelectableSpecialPressed(u32, i32, i32),
+    SelectableSpecialDragged(u32, i32, i32),
+    SelectableSpecialReleased(u32, i32, i32),
 }

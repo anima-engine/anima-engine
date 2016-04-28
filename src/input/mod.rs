@@ -18,3 +18,5 @@ pub use self::intermediate_event::IntermediateEvent;
 pub use self::intermediate::Button;
 pub use self::intermediate::Cursor;
 pub use self::intermediate::Intermediate;
+pub use self::intermediate::SelectableArea;
+pub use self::intermediate::SpecialSelect;

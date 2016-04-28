@@ -1,5 +1,7 @@
 extern crate anima_engine;
 
+use std::time::Duration;
+
 use self::anima_engine::glium::glutin::{Event, ElementState, MouseButton};
 
 use self::anima_engine::input::{Cursor, InputEvent, Intermediate, IntermediateEvent};
@@ -11,7 +13,7 @@ fn capture_move() {
 
     assert_eq!(cursor.pos, None);
 
-    let events = cursor.process(events);
+    let events = cursor.process(events, Duration::new(0, 0));
 
     assert_eq!(cursor.pos, Some((50, 50)));
     assert!(events.is_empty());
@@ -27,7 +29,7 @@ fn capture_click() {
 
     assert_eq!(cursor.pos, None);
 
-    let events = cursor.process(events);
+    let events = cursor.process(events, Duration::new(0, 0));
 
     assert_eq!(cursor.pos, Some((50, 50)));
     match events[0] {
@@ -37,7 +39,7 @@ fn capture_click() {
         _ => assert!(false)
     };
 
-    let events = cursor.process(vec![]);
+    let events = cursor.process(vec![], Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(
@@ -57,7 +59,7 @@ fn capture_released() {
 
     assert_eq!(cursor.pos, None);
 
-    let events = cursor.process(events);
+    let events = cursor.process(events, Duration::new(0, 0));
 
     assert_eq!(cursor.pos, Some((50, 50)));
     match events[0] {

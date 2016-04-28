@@ -5,6 +5,8 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+use std::time::Duration;
+
 use glium::glutin::{Event, MouseButton, TouchPhase};
 
 use super::Intermediate;
@@ -44,7 +46,7 @@ impl Button {
 }
 
 impl<'a> Intermediate for &'a mut Button {
-    fn process(self, input: Vec<InputEvent>) -> Vec<InputEvent> {
+    fn process(self, input: Vec<InputEvent>, _dt: Duration) -> Vec<InputEvent> {
         input.into_iter().filter_map(|event| {
             match event {
                 InputEvent::Intermediate(

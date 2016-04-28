@@ -7,3 +7,4 @@
 
 mod button;
 mod cursor;
+mod selectable_area;

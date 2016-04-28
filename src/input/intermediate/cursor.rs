@@ -6,6 +6,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 use std::collections::HashMap;
+use std::time::Duration;
 
 use glium::glutin::{Event, ElementState, MouseButton};
 
@@ -29,7 +30,7 @@ impl Cursor {
 }
 
 impl<'a> Intermediate for &'a mut Cursor {
-    fn process(self, input: Vec<InputEvent>) -> Vec<InputEvent> {
+    fn process(self, input: Vec<InputEvent>, _dt: Duration) -> Vec<InputEvent> {
         let mut output = input.into_iter().filter_map(|event| {
             match event {
                 InputEvent::Raw(Event::MouseMoved(x, y)) => {

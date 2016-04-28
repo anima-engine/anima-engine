@@ -1,5 +1,7 @@
 extern crate anima_engine;
 
+use std::time::Duration;
+
 use self::anima_engine::glium::glutin::{Event, MouseButton, Touch, TouchPhase};
 
 use self::anima_engine::input::{Button, InputEvent, Intermediate, IntermediateEvent};
@@ -13,7 +15,7 @@ fn click_outside() {
     ];
     let mut button = Button::new(3, 40, 40, 20, 20);
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(
@@ -32,7 +34,7 @@ fn click_inside() {
     ];
     let mut button = Button::new(3, 40, 40, 20, 20);
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(IntermediateEvent::ButtonPressed(3)) => assert!(true),
@@ -45,7 +47,7 @@ fn click_inside() {
         )
     ];
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(IntermediateEvent::ButtonReleased(3)) => assert!(true),
@@ -62,7 +64,7 @@ fn click_canceled() {
     ];
     let mut button = Button::new(3, 40, 40, 20, 20);
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(IntermediateEvent::ButtonPressed(3)) => assert!(true),
@@ -75,7 +77,7 @@ fn click_canceled() {
         )
     ];
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(IntermediateEvent::ButtonCanceled(3)) => assert!(true),
@@ -96,7 +98,7 @@ fn touch_outside() {
     ];
     let mut button = Button::new(3, 40, 40, 20, 20);
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Raw(Event::Touch(_)) => assert!(true),
@@ -117,7 +119,7 @@ fn touch_inside() {
     ];
     let mut button = Button::new(3, 40, 40, 20, 20);
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(IntermediateEvent::ButtonPressed(3)) => assert!(true),
@@ -134,7 +136,7 @@ fn touch_inside() {
         )
     ];
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(IntermediateEvent::ButtonReleased(3)) => assert!(true),
@@ -155,7 +157,7 @@ fn touch_canceled() {
     ];
     let mut button = Button::new(3, 40, 40, 20, 20);
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(IntermediateEvent::ButtonPressed(3)) => assert!(true),
@@ -172,7 +174,7 @@ fn touch_canceled() {
         )
     ];
 
-    let events = button.process(events);
+    let events = button.process(events, Duration::new(0, 0));
 
     match events[0] {
         InputEvent::Intermediate(IntermediateEvent::ButtonCanceled(3)) => assert!(true),

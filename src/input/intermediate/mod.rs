@@ -7,16 +7,21 @@
 
 //! A `mod` containing intermediate `InputEvent` generators.
 
+use std::time::Duration;
+
 use super::InputEvent;
 
+mod area;
 mod button;
 mod cursor;
 
+pub use self::area::SelectableArea;
+pub use self::area::SpecialSelect;
 pub use self::button::Button;
 pub use self::cursor::Cursor;
 
 /// A `trait` that processes `InputEvent` which would normally create `IntermediateEvent`s from
 /// `Raw` `InputEvent`s.
 pub trait Intermediate {
-    fn process(self, input: Vec<InputEvent>) -> Vec<InputEvent>;
+    fn process(self, input: Vec<InputEvent>, dt: Duration) -> Vec<InputEvent>;
 }
