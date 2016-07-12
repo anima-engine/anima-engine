@@ -1,6 +1,6 @@
 [package]
 name = "anima-engine"
-version = "0.0.1"
+version = "0.0.2"
 description = "The quirky game engine."
 authors = ["Dragoș Tiselice <dragostiselice@gmail.com>", "Robert Krody <krody.robi@gmail.com>"]
 homepage = "http://anima-engine.org/"
@@ -11,7 +11,6 @@ license = "MPL-2.0"
 
 [dependencies]
 mrusty = "0.4.3"
-time = "0.1.35"
 
 [dev-dependencies]
 mrusty = { version = "0.4.3", features = ["gnu-readline"] }

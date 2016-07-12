@@ -9,7 +9,6 @@
 
 #[macro_use]
 pub extern crate mrusty;
-pub extern crate time;
 
 pub mod game;
 pub mod math;
