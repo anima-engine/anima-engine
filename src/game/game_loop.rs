@@ -7,14 +7,14 @@
 
 use super::game::Game;
 
-use time;
+use std::time::Instant;
 
 /// A `struct` that helps you create a very simple game loop.
 ///
 /// # Examples
 ///
 /// ```
-/// # use anima_engine::time::Duration;
+/// # use std::time::Duration;
 /// # use anima_engine::game::Game;
 /// # use anima_engine::game::GameLoop;
 /// pub struct MyGame;
@@ -39,7 +39,7 @@ impl<T: Game> GameLoop<T> {
     /// # Examples
     ///
     /// ```
-    /// # use anima_engine::time::Duration;
+    /// # use std::time::Duration;
     /// # use anima_engine::game::Game;
     /// # use anima_engine::game::GameLoop;
     /// pub struct MyGame;
@@ -64,7 +64,7 @@ impl<T: Game> GameLoop<T> {
     /// # Examples
     ///
     /// ```
-    /// # use anima_engine::time::Duration;
+    /// # use std::time::Duration;
     /// # use anima_engine::game::Game;
     /// # use anima_engine::game::GameLoop;
     /// pub struct MyGame;
@@ -80,16 +80,10 @@ impl<T: Game> GameLoop<T> {
     /// GameLoop::new(MyGame).run();
     /// ```
     pub fn run(&self) {
-        let mut last = time::get_time();
+        let mut last = Instant::now();
 
-        loop {
-            let now = time::get_time();
-
-            if !self.game.update(now - last) {
-                break;
-            }
-
-            last = now;
+        while self.game.update(last.elapsed()) {
+            last = Instant::now();
         }
     }
 }

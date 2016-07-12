@@ -7,7 +7,7 @@
 
 use std::path::Path;
 
-use time::Duration;
+use std::time::Duration;
 
 use mrusty::*;
 
@@ -62,13 +62,7 @@ impl MrubyGame {
 
 impl Game for MrubyGame {
     fn update(&self, dt: Duration) -> bool {
-        let seconds = dt.num_seconds() as f64;
-        let nanoseconds = match dt.num_nanoseconds() {
-            Some(nanoseconds) => nanoseconds as f64 / 1.0e+9,
-            None              => 0f64
-        };
-
-        let dt = self.mruby.float(seconds + nanoseconds);
+        let dt = self.mruby.float(dt.as_secs() as f64 + dt.subsec_nanos() as f64 / 1000_000_000.0);
 
         self.game.call("update", vec![dt]).unwrap().to_bool().unwrap()
     }

@@ -5,7 +5,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-use time::Duration;
+use std::time::Duration;
 
 /// A `trait` runnable within a `GameLoop`. `dt` is the `Duration` since last frame. `update`
 /// should return the boolean value of whether the game should continue.
@@ -13,7 +13,7 @@ use time::Duration;
 /// # Examples
 ///
 /// ```
-/// # use anima_engine::time::Duration;
+/// # use std::time::Duration;
 /// # use anima_engine::game::Game;
 /// # use anima_engine::game::GameLoop;
 /// pub struct MyGame;
