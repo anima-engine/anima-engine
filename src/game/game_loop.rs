@@ -82,8 +82,14 @@ impl<T: Game> GameLoop<T> {
     pub fn run(&self) {
         let mut last = Instant::now();
 
-        while self.game.update(last.elapsed()) {
-            last = Instant::now();
+        loop {
+            let start = Instant::now();
+
+            if !self.game.update(start - last) {
+                break;
+            }
+
+            last = start;
         }
     }
 }
