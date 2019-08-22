@@ -5,13 +5,10 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-//! The quirky game engine.
+//! A `mod` containing intermediate `InputEvent` generators that work on specific areas of the
+//! screen.
 
-pub extern crate glium;
-#[macro_use]
-pub extern crate mrusty;
+mod selectable_area;
 
-pub mod game;
-pub mod input;
-pub mod math;
-pub mod scripting;
+pub use self::selectable_area::SelectableArea;
+pub use self::selectable_area::SpecialSelect;

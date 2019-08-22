@@ -5,13 +5,13 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-//! The quirky game engine.
+use glium::glutin::Event;
 
-pub extern crate glium;
-#[macro_use]
-pub extern crate mrusty;
+use super::IntermediateEvent;
 
-pub mod game;
-pub mod input;
-pub mod math;
-pub mod scripting;
+/// A `trait` that contains all either `Raw` or `Intermediate` input events.
+#[derive(Debug)]
+pub enum InputEvent {
+    Raw(Event),
+    Intermediate(IntermediateEvent)
+}

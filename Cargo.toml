@@ -10,6 +10,7 @@ keywords = ["anima", "anima-engine", "game", "engine"]
 license = "MPL-2.0"
 
 [dependencies]
+glium = "0.14.0"
 mrusty = "0.4.3"
 
 [dev-dependencies]
